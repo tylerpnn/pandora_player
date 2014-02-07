@@ -44,6 +44,14 @@ public class UserSession {
 		return this.userAuthToken;
 	}
 	
+	public String getAuthToken() {
+		if(this.userAuthToken != null) {
+			return this.userAuthToken;
+		} else {
+			return this.partnerAuthToken;
+		}
+	}
+	
 	public void setSyncTime(long s) {
 		this.syncTime = s;
 	}

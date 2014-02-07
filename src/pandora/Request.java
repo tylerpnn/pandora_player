@@ -1,5 +1,6 @@
 package pandora;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import json.request.JSONRequest;
@@ -17,16 +18,13 @@ public class Request {
 		crypt = new Crypt();
 		this.encrypted = encrypted;
 		params = "method=" + method;
-		if(user.getUserAuthToken() != null) {
+		if(user.getAuthToken() != null) {
 			try {
-				params += "&auth_token=" + URLEncoder.encode(user.getUserAuthToken(), "UTF-8");
-			} catch(Exception e) { e.printStackTrace(); }
-		} else if(user.getPartnerAuthToken() != null) {
-			try {
-				String auth_token = URLEncoder.encode(user.getPartnerAuthToken(), "UTF-8");
-				params += "&auth_token=" + auth_token;
-			} catch(Exception e) { e.printStackTrace(); }
-		}		
+				params += "&auth_token=" + URLEncoder.encode(user.getAuthToken(), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		if(user.getPartnerId() != null) {
 			params += "&partner_id=" + user.getPartnerId();
 		}
