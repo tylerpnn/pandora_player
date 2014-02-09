@@ -1,10 +1,13 @@
 package pandora.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import json.request.PlaylistRequest;
 import json.response.PlaylistResponse;
-import json.response.PlaylistResponse.Result.Song;
+import json.response.PlaylistResponse.Result.SongInfo;
+import json.response.StationListResponse.Result.StationInfo;
 import pandora.ErrorHandler;
 import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
@@ -15,8 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Station {
 
-	public static Song[] getPlayList(UserSession user, int stationNumber) {
-		json.response.StationListResponse.Result.Station station = user.getStations()[stationNumber];
+	public static SongInfo[] getPlayList(UserSession user, StationInfo station) {
 		
 		PlaylistRequest plreq = new PlaylistRequest();
 		plreq.setStationToken(station.getStationToken());
@@ -35,6 +37,11 @@ public class Station {
 		} catch (IOException | PandoraServerException e) {
 			e.printStackTrace();
 		}
-		return plres.getSongs();
+		List<SongInfo> songs = new ArrayList<>();
+		for(SongInfo song : plres.getSongs()) {
+			if(song.getSongIdentity() == null) continue;
+			songs.add(song);
+		}
+		return songs.toArray(new SongInfo[songs.size()]);
 	}
 }

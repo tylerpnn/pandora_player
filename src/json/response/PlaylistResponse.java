@@ -3,7 +3,7 @@ package json.response;
 import java.util.HashMap;
 import java.util.Map;
 
-import json.response.PlaylistResponse.Result.Song;
+import json.response.PlaylistResponse.Result.SongInfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,7 +14,7 @@ public class PlaylistResponse extends JSONResponse {
 	public static class Result {
 		
 		@JsonIgnoreProperties(ignoreUnknown = true)
-		public static class Song {
+		public static class SongInfo {
 			
 			@JsonIgnoreProperties(ignoreUnknown = true)
 			public static class AudioUrlMap {
@@ -186,13 +186,13 @@ public class PlaylistResponse extends JSONResponse {
 			}
 		}
 		
-		private Song[] items;
+		private SongInfo[] items;
 
-		public Song[] getItems() {
+		public SongInfo[] getItems() {
 			return items;
 		}
 
-		public void setItems(Song[] items) {
+		public void setItems(SongInfo[] items) {
 			this.items = items;
 		}
 	}
@@ -207,7 +207,7 @@ public class PlaylistResponse extends JSONResponse {
 		this.result = result;
 	}
 	
-	public Song[] getSongs() {
+	public SongInfo[] getSongs() {
 		return result.getItems();
 	}
 }

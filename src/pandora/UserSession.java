@@ -1,6 +1,9 @@
 package pandora;
 
-import json.response.StationListResponse.Result.Station;
+import java.util.Map;
+
+import json.response.PlaylistResponse.Result.SongInfo;
+import json.response.StationListResponse.Result.StationInfo;
 
 public class UserSession {
 
@@ -12,7 +15,8 @@ public class UserSession {
 	private String userId;
 	private long syncTime;
 	private long startTime;
-	private Station[] stations;
+	private Map<String, StationInfo> stations;
+	private SongInfo[] currentPlaylist;
 	
 	public UserSession(String username, String password) {
 		this.username = username;
@@ -84,12 +88,24 @@ public class UserSession {
 		return this.password;
 	}
 	
-	public void setStations(Station[] stations) {
+	public void setStations(Map<String, StationInfo> stations) {
 		this.stations = stations;
 	}
 	
-	public Station[] getStations() {
+	public Map<String, StationInfo> getStations() {
 		return this.stations;
+	}
+	
+	public void setCurrentPlaylist(SongInfo[] songs) {
+		this.currentPlaylist = songs;
+	}
+	
+	public SongInfo[] getCurrentPlaylist() {
+		return this.currentPlaylist;
+	}
+	
+	public StationInfo getStationInfo(String stationName) {
+		return stations.get(stationName);
 	}
 	
 	public String toString() {

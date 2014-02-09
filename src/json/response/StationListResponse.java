@@ -2,7 +2,7 @@ package json.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import json.response.StationListResponse.Result.Station;
+import json.response.StationListResponse.Result.StationInfo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StationListResponse extends JSONResponse {
@@ -11,10 +11,11 @@ public class StationListResponse extends JSONResponse {
 	public static class Result {
 		
 		@JsonIgnoreProperties(ignoreUnknown = true)
-		public static class Station {
+		public static class StationInfo {
 			private String stationName, stationId, stationToken, stationDetailUrl;
 			private boolean isQuickMix;
 			private String[] genres;
+			
 			public String getStationName() {
 				return stationName;
 			}
@@ -53,13 +54,13 @@ public class StationListResponse extends JSONResponse {
 			}			
 		}
 		
-		private Station[] stations;
+		private StationInfo[] stations;
 
-		public Station[] getStations() {
+		public StationInfo[] getStations() {
 			return stations;
 		}
 
-		public void setStations(Station[] stations) {
+		public void setStations(StationInfo[] stations) {
 			this.stations = stations;
 		}
 	}
@@ -74,7 +75,7 @@ public class StationListResponse extends JSONResponse {
 		this.result = result;
 	}
 	
-	public Station[] getStations() {
+	public StationInfo[] getStations() {
 		return result.getStations();
 	}
 }

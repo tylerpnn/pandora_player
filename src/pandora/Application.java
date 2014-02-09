@@ -1,39 +1,65 @@
 package pandora;
 
-import json.response.PlaylistResponse.Result.Song;
+import java.util.Set;
+
+import json.response.PlaylistResponse.Result.SongInfo;
+import json.response.StationListResponse.Result.StationInfo;
 import pandora.api.Auth;
 import pandora.api.Station;
 import pandora.api.User;
 import player.Player;
+import ui.Frame;
 
 
 public class Application {
 	
-	private static final String USERNAME = "username";
-	private static final String PASSWORD = "password";	
+	private UserSession user;
+	private Player player;
+	private static Frame gui;
 
 	public static void main(String[] args) {
-		UserSession user = new UserSession(USERNAME, PASSWORD);
+		new Application();
+	}
+	
+	public Application() {
+		gui = new Frame(this);
+	}
+	
+	public boolean login(String username, char[] password) {
+		this.user = new UserSession(username, String.valueOf(password));
 		Auth.partnerLogin(user);
 		Auth.userLogin(user);
 		User.getStationList(user);
-		Song[] songs = Station.getPlayList(user, 0);
-		for(Song song : songs) {
-			if(song.getSongIdentity() == null) continue;
-			System.out.printf("Song: %s | Artist: %s | Album: %s\n", song.getSongName(), song.getArtistName(), song.getAlbumName());
-			System.out.println("url: " + song.getAudioUrlMap().getHighQuality().getAudioUrl() + "\n");
-		}
-		Player player = new Player();
-		try {
-			player.playSong(songs[0]);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		player = new Player(this, user);
+		return true;
 	}
 	
-	public static void nextSong() {
-		
+	public void playStation(String stationName) {
+		player.playStation(user.getStationInfo(stationName));
+	}
+	
+	public void skipSong() {
+		if(player != null)
+			player.skip();
+	}
+	
+	public void playToggle() {
+		if(player != null)
+			player.playToggle();
+	}
+	
+	public void displaySongs(SongInfo[] playlist) {
+		gui.displaySongs(playlist);
+	}
+	
+	public String[]	getStationList() {
+		Set<String> stations = null;
+		if(user != null) {
+			stations = user.getStations().keySet();
+			return stations.toArray(new String[stations.size()]);
+		} else {
+			return new String[0];
+		}
 	}
 }
 

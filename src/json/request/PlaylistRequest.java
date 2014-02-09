@@ -3,6 +3,7 @@ package json.request;
 public class PlaylistRequest extends JSONRequest {
 
 	private String userAuthToken, stationToken;
+	
 	private long syncTime;
 	
 	public String getUserAuthToken() {

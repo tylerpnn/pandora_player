@@ -1,9 +1,12 @@
 package pandora.api;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import json.request.StationListRequest;
 import json.response.StationListResponse;
+import json.response.StationListResponse.Result.StationInfo;
 import pandora.ErrorHandler;
 import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
@@ -30,6 +33,10 @@ public class User {
 		} catch(IOException | PandoraServerException e) {
 			e.printStackTrace();
 		}
-		user.setStations(slres.getStations());
+		Map<String, StationInfo> map = new HashMap<>();
+		for(StationInfo s : slres.getStations()) {
+			map.put(s.getStationName(), s);
+		}
+		user.setStations(map);
 	}
 }
