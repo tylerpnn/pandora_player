@@ -2,16 +2,19 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -24,15 +27,18 @@ public class SongDisplay extends JPanel {
 	private BufferedImage albumArt;
 	
 	public SongDisplay(JComponent parent, SongInfo song) {
-		this.setPreferredSize(new Dimension(parent.getWidth(), 75));
+		this.setPreferredSize(new Dimension(parent.getWidth(), 100));
 		this.setSize(this.getPreferredSize());
 		this.parent = parent;
 		this.song = song;
 		this.setBackground(Color.white);
 		try {
 			byte[] img = getImageData();
-			if(img != null)
+			if(img != null) {
 				albumArt = ImageIO.read(new ByteArrayInputStream(img));
+			} else {
+				albumArt = ImageIO.read(new File("blank.png"));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,12 +47,17 @@ public class SongDisplay extends JPanel {
 	protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(albumArt != null) {
-        	g.drawImage(albumArt, 2, 2, 78, 78, null);      
+        	g.drawImage(albumArt, 2, 2, 97, 97, null);      
         }
-        g.drawRect(1, 1, 79, 79);
-        g.drawString(song.getSongName(), 85, 15);
-        g.drawString("by " + song.getArtistName(), 85, 30);
-        g.drawString("on " + song.getAlbumName(), 85, 45);
+       ((Graphics2D)g).setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.drawRect(1, 1, 98, 98);
+        g.setFont(new Font("default", Font.BOLD, 14));
+        g.drawString(song.getSongName(), 110, 20);
+        g.setFont(new Font("default", Font.PLAIN, 12));
+        g.drawString("by " + song.getArtistName(), 110, 35);
+        g.drawString("on " + song.getAlbumName(), 110, 50);
     }
 	
 	public byte[] getImageData() {

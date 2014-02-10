@@ -106,6 +106,7 @@ public class Player {
 		}
 			
 		private byte[] getSongData(SongInfo song) {
+			System.out.println(song.getAudioUrlMap().getHighQuality().getAudioUrl());
 			URL url;
 			URLConnection con;
 			DataInputStream dis;

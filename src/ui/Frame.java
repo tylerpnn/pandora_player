@@ -32,7 +32,7 @@ public class Frame extends JFrame {
 		}
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(500, 400));
 		this.setSize(this.getPreferredSize());
 		Rectangle bounds = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		int x = bounds.width/2 - this.getSize().width/2;
@@ -55,7 +55,9 @@ public class Frame extends JFrame {
 		bar = new ToolBar(this);
 		songPanel = new SongPanel(this);
 		panel.add(bar, BorderLayout.SOUTH);
-		panel.add(new JScrollPane(songPanel), BorderLayout.CENTER);
+		panel.add(new JScrollPane(songPanel, 
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 	}
 	
 	public void displaySongs(SongInfo[] playlist) {

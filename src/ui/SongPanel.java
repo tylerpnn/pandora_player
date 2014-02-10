@@ -18,6 +18,7 @@ public class SongPanel extends JPanel {
 	public SongPanel(Frame parent) {
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
 		elements = 0;
 	}
 	

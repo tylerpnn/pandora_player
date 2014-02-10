@@ -3,6 +3,7 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,6 +31,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		
 		this.add(play);
 		this.add(next);
+		this.add(Box.createHorizontalGlue());
 		this.add(stationCombo);
 	}
 	
