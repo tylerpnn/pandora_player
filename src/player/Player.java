@@ -33,26 +33,18 @@ public class Player {
 	
 	private PlayerThread playerThread;
 	
-	private StationInfo station;
-	private SongInfo[] playlist;
-	private int index;
-	
 	public Player(Application app, UserSession user) {
 		this.app = app;
 		this.user = user;
 	}
 	
 	public void playStation(StationInfo station) {
-		this.station = station;
-		playlist = Station.getPlayList(user, station);
-		app.displaySongs(playlist);
-		index = 0;
 		if(playerThread != null) {
 			playerThread.interrupt();
 			playerThread.stop();
 			playerThread = null;
 		}
-		playerThread = new PlayerThread();
+		playerThread = new PlayerThread(station);
 		playerThread.start();
 	}
 	
@@ -80,29 +72,33 @@ public class Player {
 	
 	private class PlayerThread extends Thread {
 		
-		private boolean playing = false;
 		private boolean paused = false;
 		private boolean skip = false;
-		private byte[] currSong;
+		private StationInfo station;
+		private SongInfo[] playlist;
+		private SongInfo currSong;
+		private int index;
 		
-		public PlayerThread() {
+		public PlayerThread(StationInfo station) {
 			this.setDaemon(true);
+			this.station = station;
+			index = 0;
 		}
 		
 		public void run() {
-			this.currSong = getNextSong();
+			this.currSong = playlist[index++];
 			while(currSong != null && decodeMp4(currSong)) {
 				currSong = getNextSong();
 			}
 		}
 		
-		private byte[] getNextSong() {
+		private SongInfo getNextSong() {
 			if(index >= playlist.length) {
 				playlist = Station.getPlayList(user, station);
 				app.displaySongs(playlist);
 				index = 0;
 			}
-			return getSongData(playlist[index++]);
+			return playlist[index++];
 		}
 			
 		private byte[] getSongData(SongInfo song) {
@@ -130,10 +126,6 @@ public class Player {
 			this.skip = true;
 		}
 		
-		public boolean isPlaying() {
-			return this.playing;
-		}
-		
 		public boolean isPaused() {
 			return this.paused;
 		}
@@ -146,8 +138,8 @@ public class Player {
 			this.paused = false;
 		}
 		
-		private boolean decodeMp4(byte[] songData) {
-			playing = true;
+		private boolean decodeMp4(SongInfo song) {
+			byte[] songData = getSongData(song);
 			SourceDataLine dataLine = null;
 			try {
 				MP4Container cont = new MP4Container(new ByteArrayInputStream(songData));
@@ -182,7 +174,6 @@ public class Player {
 					dataLine.close();
 				}				
 			}
-			playing = false;
 			return true;
 		}
 	}	
