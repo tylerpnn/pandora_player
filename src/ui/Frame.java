@@ -62,6 +62,7 @@ public class Frame extends JFrame {
 	
 	public void displaySongs(SongInfo[] playlist) {
 		songPanel.addSongs(playlist);
+		this.validate();
 	}
 	
 	public void chooseStation(String stationName) {

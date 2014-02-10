@@ -86,14 +86,14 @@ public class Player {
 		}
 		
 		public void run() {
-			this.currSong = playlist[index++];
+			this.currSong = getNextSong();
 			while(currSong != null && decodeMp4(currSong)) {
 				currSong = getNextSong();
 			}
 		}
 		
 		private SongInfo getNextSong() {
-			if(index >= playlist.length) {
+			if(playlist == null || index >= playlist.length) {
 				playlist = Station.getPlayList(user, station);
 				app.displaySongs(playlist);
 				index = 0;

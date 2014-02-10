@@ -65,6 +65,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 		password = new JPasswordField();
 		password.setMaximumSize(new Dimension(150, 18));
 		password.setPreferredSize(new Dimension(150, 18));
+		password.addActionListener(this);
 		panel.add(username);
 		panel.add(Box.createVerticalStrut(10));
 		panel.add(password);
@@ -99,6 +100,10 @@ public class LoginDialog extends JDialog implements ActionListener {
 		}
 		if(e.getSource() == cancel) {
 			this.close();
+		}
+		if(e.getSource() == this.password) {
+			this.close();
+			parent.login(username.getText(), password.getPassword());
 		}
 	}
 }
