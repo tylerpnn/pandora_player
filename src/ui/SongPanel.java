@@ -1,38 +1,62 @@
 package ui;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import json.response.PlaylistResponse.Result.SongInfo;
 
-public class SongPanel extends JPanel {
+public class SongPanel extends JPanel implements MouseListener {
 
 	private Frame parent;
-	private int elements;
+	private List<SongDisplay> elements;
+	private SongDisplay selected;
 	
 	public SongPanel(Frame parent) {
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
-		elements = 0;
+		this.addMouseListener(this);
 	}
 	
-	public void addSongDisplay(SongDisplay sd) {
+	public void addSongDisplay(SongDisplay sd) {		
 		this.add(sd);
 	}
 	
 	public void addSongs(SongInfo[] playlist) {
 		this.removeAll();
+		elements = new ArrayList<>();
 		for(SongInfo song : playlist) {
 			SongDisplay sd = new SongDisplay(this, song);
 			addSongDisplay(sd);
-			elements++;
+			elements.add(sd);
 		}
 		this.validate();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
 	}
 }

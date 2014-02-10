@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -15,12 +17,13 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import json.response.PlaylistResponse.Result.SongInfo;
 
-public class SongDisplay extends JPanel {
+public class SongDisplay extends JPanel implements MouseListener {
 	
 	private JComponent parent;
 	private SongInfo song;
@@ -42,6 +45,7 @@ public class SongDisplay extends JPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.addMouseListener(this);
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -80,5 +84,28 @@ public class SongDisplay extends JPanel {
 			e.printStackTrace();
 		}
 		return data;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		this.setBackground(new Color(200, 200, 200));
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		this.setBackground(Color.white);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		
 	}
 }
