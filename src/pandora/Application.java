@@ -49,7 +49,7 @@ public class Application {
 			player.playToggle();
 	}
 	
-	public void displaySongs(SongInfo[] playlist) {
+	public void displaySongs(Song[] playlist) {
 		gui.displaySongs(playlist);
 	}
 	

@@ -1,5 +1,6 @@
 package player;
 
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.net.URL;
@@ -9,12 +10,8 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
+import javax.swing.BorderFactory;
 
-import pandora.Application;
-import pandora.UserSession;
-import pandora.api.Station;
-
-import json.response.PlaylistResponse.Result.SongInfo;
 import json.response.StationListResponse.Result.StationInfo;
 import net.sourceforge.jaad.aac.Decoder;
 import net.sourceforge.jaad.aac.Profile;
@@ -24,6 +21,10 @@ import net.sourceforge.jaad.mp4.api.AudioTrack;
 import net.sourceforge.jaad.mp4.api.Frame;
 import net.sourceforge.jaad.mp4.api.Movie;
 import net.sourceforge.jaad.mp4.api.Track;
+import pandora.Application;
+import pandora.Song;
+import pandora.UserSession;
+import pandora.api.Station;
 
 
 public class Player {
@@ -75,8 +76,8 @@ public class Player {
 		private boolean paused = false;
 		private boolean skip = false;
 		private StationInfo station;
-		private SongInfo[] playlist;
-		private SongInfo currSong;
+		private Song[] playlist;
+		private Song currSong;
 		private int index;
 		
 		public PlayerThread(StationInfo station) {
@@ -92,7 +93,7 @@ public class Player {
 			}
 		}
 		
-		private SongInfo getNextSong() {
+		private Song getNextSong() {
 			if(playlist == null || index >= playlist.length) {
 				playlist = Station.getPlayList(user, station);
 				app.displaySongs(playlist);
@@ -101,14 +102,14 @@ public class Player {
 			return playlist[index++];
 		}
 			
-		private byte[] getSongData(SongInfo song) {
-			System.out.println(song.getAudioUrlMap().getHighQuality().getAudioUrl());
+		private byte[] getSongData(Song song) {
+			System.out.println(song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl());
 			URL url;
 			URLConnection con;
 			DataInputStream dis;
 			byte[] data = null;
 			try {
-				url = new URL(song.getAudioUrlMap().getHighQuality().getAudioUrl());
+				url = new URL(song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl());
 				con = url.openConnection();
 				dis = new DataInputStream(con.getInputStream());
 				data = new byte[con.getContentLength()];
@@ -138,19 +139,21 @@ public class Player {
 			this.paused = false;
 		}
 		
-		private boolean decodeMp4(SongInfo song) {
+		private boolean decodeMp4(Song song) {
 			byte[] songData = getSongData(song);
+			song.setPlaying(true);
+			song.getDisplay().setBackground(new Color(220,220,220));
 			SourceDataLine dataLine = null;
 			try {
 				MP4Container cont = new MP4Container(new ByteArrayInputStream(songData));
 				Movie movie = cont.getMovie();
+				song.setDuration((int)movie.getDuration());
 				List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
 				AudioTrack track = (AudioTrack) tracks.get(0);
 				AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, track.getSampleSize(), track.getChannelCount(), true, true);
 				dataLine = AudioSystem.getSourceDataLine(audioFormat);
 				dataLine.open(audioFormat);
 				dataLine.start();
-				
 				Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 				dec.getConfig().setProfile(Profile.AAC_LC);
 				dec.getConfig().setSBREnabled(false);
@@ -160,10 +163,14 @@ public class Player {
 				while(!skip && track.hasMoreFrames()) {
 					while(!skip && paused) { sleep(100L); }
 					frame = track.readNextFrame();
+					song.setTime((int)frame.getTime());
+					song.getDisplay().repaint();
 					dec.decodeFrame(frame.getData(), buf);
 					chunk = buf.getData();
 					dataLine.write(chunk, 0, chunk.length);
 				}
+				song.setPlaying(false);
+				song.getDisplay().setBackground(Color.white);
 				skip = false;
 			} catch(Exception e) {
 				e.printStackTrace();

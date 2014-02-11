@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import json.response.PlaylistResponse.Result.SongInfo;
+import pandora.Song;
 
 public class SongPanel extends JPanel implements MouseListener {
 
@@ -29,11 +30,12 @@ public class SongPanel extends JPanel implements MouseListener {
 		this.add(sd);
 	}
 	
-	public void addSongs(SongInfo[] playlist) {
+	public void addSongs(Song[] playlist) {
 		this.removeAll();
 		elements = new ArrayList<>();
-		for(SongInfo song : playlist) {
+		for(Song song : playlist) {
 			SongDisplay sd = new SongDisplay(this, song);
+			song.setDisplay(sd);
 			addSongDisplay(sd);
 			elements.add(sd);
 		}

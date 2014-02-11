@@ -5,14 +5,13 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
-import json.response.PlaylistResponse.Result.SongInfo;
 import pandora.Application;
+import pandora.Song;
 
 public class Frame extends JFrame {
 
@@ -60,7 +59,7 @@ public class Frame extends JFrame {
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 	}
 	
-	public void displaySongs(SongInfo[] playlist) {
+	public void displaySongs(Song[] playlist) {
 		songPanel.addSongs(playlist);
 		this.validate();
 	}

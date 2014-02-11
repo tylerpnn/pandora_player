@@ -17,19 +17,19 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import json.response.PlaylistResponse.Result.SongInfo;
+import pandora.Song;
 
 public class SongDisplay extends JPanel implements MouseListener {
 	
 	private JComponent parent;
-	private SongInfo song;
+	private Song song;
 	private BufferedImage albumArt;
 	
-	public SongDisplay(JComponent parent, SongInfo song) {
+	public SongDisplay(JComponent parent, Song song) {
 		this.setPreferredSize(new Dimension(parent.getWidth(), 100));
 		this.setSize(this.getPreferredSize());
 		this.parent = parent;
@@ -58,21 +58,27 @@ public class SongDisplay extends JPanel implements MouseListener {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.drawRect(1, 1, 98, 98);
         g.setFont(new Font("default", Font.BOLD, 14));
-        g.drawString(song.getSongName(), 110, 20);
+        g.drawString(song.getSongInfo().getSongName(), 110, 20);
         g.setFont(new Font("default", Font.PLAIN, 12));
-        g.drawString("by " + song.getArtistName(), 110, 35);
-        g.drawString("on " + song.getAlbumName(), 110, 50);
+        g.drawString("by " + song.getSongInfo().getArtistName(), 110, 35);
+        g.drawString("on " + song.getSongInfo().getAlbumName(), 110, 50);
+        if(song.isPlaying()) {
+        	g.drawString(String.format("%d:%02d / %d:%02d", song.getTime() / 60,
+        			song.getTime() % 60,
+        			song.getDuration() / 60,
+        			song.getDuration() % 60), 110, 90);
+        }
     }
 	
 	public byte[] getImageData() {
-		if(song.getAlbumArtUrl().equals(""))
+		if(song.getSongInfo().getAlbumArtUrl().equals(""))
 			return null;
 		URL url;
 		URLConnection con;
 		DataInputStream dis;
 		byte[] data = null;
 		try {
-			url = new URL(song.getAlbumArtUrl());
+			url = new URL(song.getSongInfo().getAlbumArtUrl());
 			con = url.openConnection();
 			dis = new DataInputStream(con.getInputStream());
 			data = new byte[con.getContentLength()];
@@ -92,12 +98,10 @@ public class SongDisplay extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		this.setBackground(new Color(200, 200, 200));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		this.setBackground(Color.white);
 	}
 
 	@Override

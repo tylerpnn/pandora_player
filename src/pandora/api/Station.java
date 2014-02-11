@@ -12,13 +12,14 @@ import pandora.ErrorHandler;
 import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
 import pandora.RequestHandler;
+import pandora.Song;
 import pandora.UserSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Station {
 
-	public static SongInfo[] getPlayList(UserSession user, StationInfo station) {
+	public static Song[] getPlayList(UserSession user, StationInfo station) {
 		
 		PlaylistRequest plreq = new PlaylistRequest();
 		plreq.setStationToken(station.getStationToken());
@@ -37,11 +38,11 @@ public class Station {
 		} catch (IOException | PandoraServerException e) {
 			e.printStackTrace();
 		}
-		List<SongInfo> songs = new ArrayList<>();
-		for(SongInfo song : plres.getSongs()) {
-			if(song.getSongIdentity() == null) continue;
-			songs.add(song);
+		List<Song> songs = new ArrayList<>();
+		for(SongInfo songInfo : plres.getSongs()) {
+			if(songInfo.getSongIdentity() == null) continue;
+			songs.add(new Song(songInfo));
 		}
-		return songs.toArray(new SongInfo[songs.size()]);
+		return songs.toArray(new Song[songs.size()]);
 	}
 }
