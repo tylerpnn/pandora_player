@@ -20,16 +20,15 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import json.response.PlaylistResponse.Result.SongInfo;
 import pandora.Song;
 
 public class SongDisplay extends JPanel implements MouseListener {
 	
-	private JComponent parent;
+	private SongPanel parent;
 	private Song song;
 	private BufferedImage albumArt;
 	
-	public SongDisplay(JComponent parent, Song song) {
+	public SongDisplay(SongPanel parent, Song song) {
 		this.setPreferredSize(new Dimension(parent.getWidth(), 100));
 		this.setSize(this.getPreferredSize());
 		this.parent = parent;
@@ -70,6 +69,17 @@ public class SongDisplay extends JPanel implements MouseListener {
         }
     }
 	
+	public void update() {
+		repaint();
+	}
+	
+	public void setPlaying(boolean b) {
+		if(b)
+			setBackground(new Color(220, 220, 220));
+		else
+			setBackground(Color.white);
+	}
+	
 	public byte[] getImageData() {
 		if(song.getSongInfo().getAlbumArtUrl().equals(""))
 			return null;
@@ -91,9 +101,18 @@ public class SongDisplay extends JPanel implements MouseListener {
 		}
 		return data;
 	}
+	
+	public Song getSong() {
+		return this.song;
+	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount() == 2) {
+			//play song
+		} else {
+			parent.select(this);
+		}
 	}
 
 	@Override

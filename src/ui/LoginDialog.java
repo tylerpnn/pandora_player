@@ -36,7 +36,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 		panel.add(buttonPanel(), BorderLayout.SOUTH);		
 		
 		this.setLocationRelativeTo(parent);
-		this.setSize(new Dimension(220, 125));
+		this.pack();
 		this.setResizable(false);
 		this.setVisible(true);
 	}

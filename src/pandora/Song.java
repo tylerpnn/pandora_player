@@ -35,12 +35,20 @@ public class Song {
 		this.duration = t;
 	}
 	
+	public void update(int time) {
+		setTime(time);
+		if(display != null)
+			display.update();
+	}
+	
 	public boolean isPlaying() {
 		return this.playing;
 	}
 	
 	public void setPlaying(boolean b) {
 		this.playing = b;
+		if(display != null)
+			display.setPlaying(b);
 	}
 	
 	public void setDisplay(SongDisplay display) {

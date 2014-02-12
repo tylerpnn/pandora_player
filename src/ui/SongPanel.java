@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import json.response.PlaylistResponse.Result.SongInfo;
 import pandora.Song;
 
-public class SongPanel extends JPanel implements MouseListener {
+public class SongPanel extends JPanel {
 
 	private Frame parent;
 	private List<SongDisplay> elements;
@@ -23,7 +23,6 @@ public class SongPanel extends JPanel implements MouseListener {
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
-		this.addMouseListener(this);
 	}
 	
 	public void addSongDisplay(SongDisplay sd) {		
@@ -41,24 +40,16 @@ public class SongPanel extends JPanel implements MouseListener {
 		}
 		this.validate();
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
+	
+	public void select(SongDisplay sd) {
+		if(selected != null || selected == sd) {
+			if(selected.getSong().isPlaying()) {
+				selected.setBackground(new Color(220, 220, 220));
+			} else {
+				selected.setBackground(Color.white);
+			}
+		}
+		selected = sd;
+		selected.setBackground(new Color(42, 161, 235));
 	}
 }

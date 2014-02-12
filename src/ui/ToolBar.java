@@ -3,17 +3,28 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.Mixer;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JSlider;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import player.Audio;
+import player.Player;
 
 public class ToolBar extends JToolBar implements ActionListener {
 
 	private JComboBox<String> stationCombo;
 	private JButton play;
 	private JButton next;
+	private JSlider vol;
 	private Frame parent;
 	
 	public ToolBar(Frame parent) {
@@ -31,6 +42,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		
 		this.add(play);
 		this.add(next);
+//		this.add(volSlider());
 		this.add(Box.createHorizontalGlue());
 		this.add(stationCombo);
 	}
@@ -42,6 +54,16 @@ public class ToolBar extends JToolBar implements ActionListener {
 	public void setStations(String[] stations) {
 		DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>(stations);
 		this.stationCombo.setModel(m);
+	}
+	
+	public JSlider volSlider() {
+		vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+		vol.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				Audio.setMasterOutputVolume(vol.getValue() / 100f);				
+			}
+		});
+		return vol;
 	}
 
 	@Override

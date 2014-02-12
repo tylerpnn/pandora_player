@@ -1,6 +1,5 @@
 package player;
 
-import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.net.URL;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.BorderFactory;
 
 import json.response.StationListResponse.Result.StationInfo;
 import net.sourceforge.jaad.aac.Decoder;
@@ -140,9 +138,8 @@ public class Player {
 		}
 		
 		private boolean decodeMp4(Song song) {
-			byte[] songData = getSongData(song);
 			song.setPlaying(true);
-			song.getDisplay().setBackground(new Color(220,220,220));
+			byte[] songData = getSongData(song);
 			SourceDataLine dataLine = null;
 			try {
 				MP4Container cont = new MP4Container(new ByteArrayInputStream(songData));
@@ -163,14 +160,12 @@ public class Player {
 				while(!skip && track.hasMoreFrames()) {
 					while(!skip && paused) { sleep(100L); }
 					frame = track.readNextFrame();
-					song.setTime((int)frame.getTime());
-					song.getDisplay().repaint();
+					song.update((int)frame.getTime());
 					dec.decodeFrame(frame.getData(), buf);
 					chunk = buf.getData();
 					dataLine.write(chunk, 0, chunk.length);
 				}
 				song.setPlaying(false);
-				song.getDisplay().setBackground(Color.white);
 				skip = false;
 			} catch(Exception e) {
 				e.printStackTrace();
