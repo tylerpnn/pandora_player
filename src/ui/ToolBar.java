@@ -28,8 +28,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 	
 	public ToolBar(Frame parent) {
 		super(HORIZONTAL);
-		this.setPreferredSize(new Dimension(this.getWidth(), 40));
-//		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 		this.parent = parent;
 		play = new JButton("Play");
 		play.setFocusable(false);
@@ -44,9 +43,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.add(play);
 		this.add(next);
 		this.add(Box.createHorizontalGlue());
-		this.add(volSlider());
 		this.add(stationCombo);
-		this.add(Box.createHorizontalGlue());
 	}
 	
 	public void setSelectedStation(String stationName) {
@@ -58,36 +55,36 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.stationCombo.setModel(m);
 	}
 	
-	public JSlider volSlider() {
-		Class<?> sliderUIClass;
-		Field paintValue = null;
-		try {
-			sliderUIClass = Class.forName("javax.swing.plaf.synth.SynthSliderUI");
-	        paintValue = sliderUIClass.getDeclaredField("paintValue");
-	        paintValue.setAccessible(true);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
-		Audio.setMasterOutputVolume(1f);
-		vol.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				Audio.setMasterOutputVolume(vol.getValue() / 100f);
-			}
-		});
-		vol.setPreferredSize(new Dimension(100, play.getPreferredSize().height));
-		try {
-            paintValue.set(vol.getUI(), false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-		vol.setFocusable(false);
+//	public JSlider volSlider() {
+//		Class<?> sliderUIClass;
+//		Field paintValue = null;
+//		try {
+//			sliderUIClass = Class.forName("javax.swing.plaf.synth.SynthSliderUI");
+//	        paintValue = sliderUIClass.getDeclaredField("paintValue");
+//	        paintValue.setAccessible(true);
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
+//		vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+//		Audio.setMasterOutputVolume(1f);
+//		vol.addChangeListener(new ChangeListener() {
+//			public void stateChanged(ChangeEvent e) {
+//				Audio.setMasterOutputVolume(vol.getValue() / 100f);
+//			}
+//		});
+//		vol.setPreferredSize(new Dimension(100, play.getPreferredSize().height));
+//		try {
+//            paintValue.set(vol.getUI(), false);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//		vol.setFocusable(false);
 //		JPanel panel = new JPanel();
 //		panel.setBackground(this.getBackground());
 //		panel.add(new JLabel("Vol: "));
 //		panel.add(vol);
-		return vol;
-	}
+//		return vol;
+//	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
