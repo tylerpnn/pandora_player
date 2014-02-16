@@ -31,6 +31,7 @@ public class Player {
 	private Application app;
 	
 	private PlayerThread playerThread;
+	public static boolean isPaused;
 	
 	public Player(Application app, UserSession user) {
 		this.app = app;
@@ -131,10 +132,12 @@ public class Player {
 		
 		public void pause() {
 			this.paused = true;
+			isPaused = true;
 		}
 		
 		public void play() {
 			this.paused = false;
+			isPaused = false;
 		}
 		
 		private boolean decodeMp4(Song song) {

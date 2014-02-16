@@ -3,39 +3,43 @@ package ui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Field;
 
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-import player.Audio;
+import player.Player;
 
 public class ToolBar extends JToolBar implements ActionListener {
 
 	private JComboBox<String> stationCombo;
 	private JButton play;
 	private JButton next;
-	private JSlider vol;
 	private Frame parent;
+	private ImageIcon playIcon;
+	private ImageIcon pauseIcon;
 	
 	public ToolBar(Frame parent) {
 		super(HORIZONTAL);
+		this.setFloatable(false);
 		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 		this.parent = parent;
-		play = new JButton("Play");
+		
+		playIcon = new ImageIcon("res/play.png");
+		pauseIcon = new ImageIcon("res/pause.png");
+		
+		play = new JButton(playIcon);
 		play.setFocusable(false);
 		play.addActionListener(this);
-		next = new JButton("Next");
+		
+		next = new JButton(new ImageIcon("res/next.png"));
 		next.setFocusable(false);
 		next.addActionListener(this);
+		
 		stationCombo = new JComboBox<>();
 		stationCombo.addActionListener(this);
 		stationCombo.setFocusable(false);
@@ -55,36 +59,13 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.stationCombo.setModel(m);
 	}
 	
-//	public JSlider volSlider() {
-//		Class<?> sliderUIClass;
-//		Field paintValue = null;
-//		try {
-//			sliderUIClass = Class.forName("javax.swing.plaf.synth.SynthSliderUI");
-//	        paintValue = sliderUIClass.getDeclaredField("paintValue");
-//	        paintValue.setAccessible(true);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
-//		vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
-//		Audio.setMasterOutputVolume(1f);
-//		vol.addChangeListener(new ChangeListener() {
-//			public void stateChanged(ChangeEvent e) {
-//				Audio.setMasterOutputVolume(vol.getValue() / 100f);
-//			}
-//		});
-//		vol.setPreferredSize(new Dimension(100, play.getPreferredSize().height));
-//		try {
-//            paintValue.set(vol.getUI(), false);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//		vol.setFocusable(false);
-//		JPanel panel = new JPanel();
-//		panel.setBackground(this.getBackground());
-//		panel.add(new JLabel("Vol: "));
-//		panel.add(vol);
-//		return vol;
-//	}
+	public void buttonToggle(boolean paused) {
+		if(paused == false) {
+			play.setIcon(pauseIcon);
+		} else {
+			play.setIcon(playIcon);
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -99,6 +80,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		}
 		if(e.getSource() == play) {
 			parent.playToggle();
+			buttonToggle(Player.isPaused);
 		}
 	}
 }

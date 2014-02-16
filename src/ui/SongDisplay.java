@@ -39,7 +39,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 			if(img != null) {
 				albumArt = ImageIO.read(new ByteArrayInputStream(img));
 			} else {
-				albumArt = ImageIO.read(new File("blank.png"));
+				albumArt = ImageIO.read(new File("res/blank.png"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -74,10 +74,12 @@ public class SongDisplay extends JPanel implements MouseListener {
 	}
 	
 	public void setPlaying(boolean b) {
-		if(b)
+		if(b) {
 			setBackground(new Color(220, 220, 220));
-		else
+			parent.scroll(this);
+		} else {
 			setBackground(Color.white);
+		}
 	}
 	
 	public byte[] getImageData() {

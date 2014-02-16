@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
@@ -19,6 +20,7 @@ public class Frame extends JFrame {
 	private Application app;
 	private ToolBar bar;
 	private SongPanel songPanel;
+	private JScrollPane scrollPane;
 	
 	public Frame(Application app) {
 		super("Pandora Player");
@@ -52,11 +54,16 @@ public class Frame extends JFrame {
 	public void initComponents() {
 		this.setJMenuBar(new MenuBar(this));
 		bar = new ToolBar(this);
-		songPanel = new SongPanel(this);
 		panel.add(bar, BorderLayout.SOUTH);
-		panel.add(new JScrollPane(songPanel, 
+		songPanel = new SongPanel(this);
+		scrollPane = new JScrollPane(songPanel, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		panel.add(scrollPane);
+	}
+	
+	public JScrollBar getScrollBar() {
+		return scrollPane.getVerticalScrollBar();
 	}
 	
 	public void displaySongs(Song[] playlist) {
@@ -65,19 +72,15 @@ public class Frame extends JFrame {
 	}
 	
 	public void chooseStation(String stationName) {
-		if(app != null) {
-			app.playStation(stationName);
-		}		
+		app.playStation(stationName);	
 	}
 	
 	public void skipSong() {
-		if(app != null)
-			app.skipSong();
+		app.skipSong();
 	}
 	
 	public void playToggle() {
-		if(app != null)
-			app.playToggle();
+		app.playToggle();
 	}
 	
 	public void login(String username, char[] password) {
@@ -85,6 +88,7 @@ public class Frame extends JFrame {
 			bar.setStations(app.getStationList());
 		}
 		bar.setSelectedStation("QuickMix");
+		bar.buttonToggle(false);
 	}
 	
 	public String[] getStationList() {

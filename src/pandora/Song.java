@@ -36,7 +36,7 @@ public class Song {
 	}
 	
 	public void update(int time) {
-		setTime(time);
+		this.time = time;
 		if(display != null)
 			display.update();
 	}

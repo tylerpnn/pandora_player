@@ -1,28 +1,25 @@
 package ui;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import json.response.PlaylistResponse.Result.SongInfo;
 import pandora.Song;
 
 public class SongPanel extends JPanel {
 
 	private Frame parent;
-	private List<SongDisplay> elements;
 	private SongDisplay selected;
 	
 	public SongPanel(Frame parent) {
+		this.parent = parent;
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
+		this.setSize(new Dimension(parent.getWidth(), 400));
 	}
 	
 	public void addSongDisplay(SongDisplay sd) {		
@@ -30,15 +27,20 @@ public class SongPanel extends JPanel {
 	}
 	
 	public void addSongs(Song[] playlist) {
-		this.removeAll();
-		elements = new ArrayList<>();
 		for(Song song : playlist) {
 			SongDisplay sd = new SongDisplay(this, song);
 			song.setDisplay(sd);
 			addSongDisplay(sd);
-			elements.add(sd);
 		}
 		this.validate();
+	}
+	
+	public void scroll(SongDisplay sd) {
+		if(sd.getLocation().y >= parent.getScrollBar().getValue() + sd.getHeight()*3) {
+			parent.getScrollBar().setValue(sd.getLocation().y);
+			repaint();
+			validate();
+		}
 	}
 	
 	public void select(SongDisplay sd) {
