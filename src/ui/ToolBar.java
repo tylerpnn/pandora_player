@@ -29,14 +29,15 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 		this.parent = parent;
 		
-		playIcon = new ImageIcon("res/play.png");
-		pauseIcon = new ImageIcon("res/pause.png");
+		ClassLoader c = this.getClass().getClassLoader();
+		playIcon = new ImageIcon(c.getResource("res/play.png"));
+		pauseIcon = new ImageIcon(c.getResource("res/pause.png"));
+		next = new JButton(new ImageIcon(c.getResource("res/next.png")));
 		
 		play = new JButton(playIcon);
 		play.setFocusable(false);
 		play.addActionListener(this);
 		
-		next = new JButton(new ImageIcon("res/next.png"));
 		next.setFocusable(false);
 		next.addActionListener(this);
 		

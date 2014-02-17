@@ -38,7 +38,8 @@ public class SongDisplay extends JPanel implements MouseListener {
 			if(img != null) {
 				albumArt = ImageIO.read(new ByteArrayInputStream(img));
 			} else {
-				albumArt = ImageIO.read(new File("res/blank.png"));
+				ClassLoader c = this.getClass().getClassLoader();
+				albumArt = ImageIO.read(c.getResourceAsStream("res/blank.png"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
