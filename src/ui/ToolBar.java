@@ -13,6 +13,7 @@ import javax.swing.JSlider;
 import javax.swing.JToolBar;
 
 import player.Player;
+import player.Player.PlayerState;
 
 public class ToolBar extends JToolBar implements ActionListener {
 
@@ -59,10 +60,10 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.stationCombo.setModel(m);
 	}
 	
-	public void buttonToggle(boolean paused) {
-		if(paused == false) {
+	public void buttonToggle(PlayerState state) {
+		if(state == PlayerState.PLAYING || state == PlayerState.WAITING) {
 			play.setIcon(pauseIcon);
-		} else {
+		} else if(state == PlayerState.PAUSED) {
 			play.setIcon(playIcon);
 		}
 	}
@@ -80,7 +81,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		}
 		if(e.getSource() == play) {
 			parent.playToggle();
-			buttonToggle(Player.isPaused);
+			buttonToggle(Player.status);
 		}
 	}
 }

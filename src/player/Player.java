@@ -29,13 +29,15 @@ public class Player {
 
 	private UserSession user;
 	private Application app;
+	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	
 	private PlayerThread playerThread;
-	public static boolean isPaused;
+	public static PlayerState status;
 	
 	public Player(Application app, UserSession user) {
 		this.app = app;
 		this.user = user;
+		status = PlayerState.WAITING;
 	}
 	
 	public void playStation(StationInfo station) {
@@ -132,12 +134,12 @@ public class Player {
 		
 		public void pause() {
 			this.paused = true;
-			isPaused = true;
+			status = PlayerState.PAUSED;
 		}
 		
 		public void play() {
 			this.paused = false;
-			isPaused = false;
+			status = PlayerState.PLAYING;
 		}
 		
 		private boolean decodeMp4(Song song) {

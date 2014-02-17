@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 
 import pandora.Application;
 import pandora.Song;
+import player.Player;
 
 public class Frame extends JFrame {
 
@@ -88,7 +89,7 @@ public class Frame extends JFrame {
 			bar.setStations(app.getStationList());
 		}
 		bar.setSelectedStation("QuickMix");
-		bar.buttonToggle(false);
+		bar.buttonToggle(Player.status);
 	}
 	
 	public String[] getStationList() {

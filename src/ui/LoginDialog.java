@@ -1,13 +1,11 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -31,8 +29,9 @@ public class LoginDialog extends JDialog implements ActionListener {
 		this.getContentPane().add(panel);	
 		panel.setLayout(new BorderLayout());
 		
-		panel.add(labelPanel(), BorderLayout.WEST);
-		panel.add(fieldPanel(), BorderLayout.EAST);
+//		panel.add(labelPanel(), BorderLayout.WEST);
+//		panel.add(fieldPanel(), BorderLayout.EAST);
+		panel.add(grid(), BorderLayout.CENTER);
 		panel.add(buttonPanel(), BorderLayout.SOUTH);		
 		
 		this.setLocationRelativeTo(parent);
@@ -43,67 +42,71 @@ public class LoginDialog extends JDialog implements ActionListener {
 	
 	private JPanel buttonPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		login = new JButton("Login");
 		cancel = new JButton("Cancel");
 		login.addActionListener(this);
 		cancel.addActionListener(this);
-		panel.add(Box.createHorizontalGlue());
 		panel.add(login);
-		panel.add(Box.createHorizontalStrut(10));
 		panel.add(cancel);
-		panel.add(Box.createHorizontalGlue());
+		return panel;
+	}
+	
+	public JPanel grid() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(2, 2, 0, 5));
+		JLabel emailLabel = new JLabel("Email:");
+		emailLabel.setAlignmentX(RIGHT_ALIGNMENT);
+		JLabel passwordLabel = new JLabel("Password:");
+		passwordLabel.setAlignmentX(RIGHT_ALIGNMENT);
+		username = new JTextField(15);	
+		password = new JPasswordField(15);
+		password.addActionListener(this);
+		panel.add(emailLabel);
+		panel.add(username);
+		panel.add(passwordLabel);
+		panel.add(password);
 		return panel;
 	}
 	
 	private JPanel fieldPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		username = new JTextField();
-		username.setPreferredSize(new Dimension(150, 18));
-		username.setMaximumSize(new Dimension(150, 18));		
-		password = new JPasswordField();
-		password.setMaximumSize(new Dimension(150, 18));
-		password.setPreferredSize(new Dimension(150, 18));
+		panel.setLayout(new BorderLayout());
+		username = new JTextField(15);	
+		password = new JPasswordField(15);
 		password.addActionListener(this);
-		panel.add(username);
-		panel.add(Box.createVerticalStrut(10));
-		panel.add(password);
-		panel.add(Box.createVerticalGlue());
+		panel.add(username, BorderLayout.NORTH);
+		panel.add(password, BorderLayout.SOUTH);
 		return panel;
 	}
 	
 	private JPanel labelPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(new BorderLayout());
 		JLabel emailLabel = new JLabel("Email:");
 		emailLabel.setAlignmentX(RIGHT_ALIGNMENT);
 		JLabel passwordLabel = new JLabel("Password:");
 		passwordLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		panel.add(Box.createVerticalStrut(1));
-		panel.add(emailLabel);
-		panel.add(Box.createVerticalStrut(14));
-		panel.add(passwordLabel);
-		panel.add(Box.createVerticalGlue());
+		panel.add(emailLabel, BorderLayout.NORTH);
+		panel.add(passwordLabel, BorderLayout.SOUTH);
 		return panel;
 	}
 	
 	public void close() {
 		this.dispose();
 	}
+	
+	public void login(String username, char[] password) {
+		parent.login(username, password);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		close();
 		if(e.getSource() == this.login) {
-			this.close();
-			parent.login(username.getText(), password.getPassword());
-		}
-		if(e.getSource() == cancel) {
-			this.close();
+			login(username.getText(), password.getPassword());
 		}
 		if(e.getSource() == this.password) {
-			this.close();
-			parent.login(username.getText(), password.getPassword());
+			login(username.getText(), password.getPassword());
 		}
 	}
 }
