@@ -29,9 +29,9 @@ public class LoginDialog extends JDialog implements ActionListener {
 		this.getContentPane().add(panel);	
 		panel.setLayout(new BorderLayout());
 		
-//		panel.add(labelPanel(), BorderLayout.WEST);
-//		panel.add(fieldPanel(), BorderLayout.EAST);
-		panel.add(grid(), BorderLayout.CENTER);
+		panel.add(labelPanel(), BorderLayout.WEST);
+		panel.add(fieldPanel(), BorderLayout.EAST);
+//		panel.add(grid(), BorderLayout.CENTER);
 		panel.add(buttonPanel(), BorderLayout.SOUTH);		
 		
 		this.setLocationRelativeTo(parent);
@@ -51,7 +51,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 		return panel;
 	}
 	
-	public JPanel grid() {
+	private JPanel grid() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(2, 2, 0, 5));
 		JLabel emailLabel = new JLabel("Email:");
@@ -70,21 +70,21 @@ public class LoginDialog extends JDialog implements ActionListener {
 	
 	private JPanel fieldPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		panel.setLayout(new GridLayout(2, 1, 0, 5));
 		username = new JTextField(15);	
 		password = new JPasswordField(15);
 		password.addActionListener(this);
-		panel.add(username, BorderLayout.NORTH);
-		panel.add(password, BorderLayout.SOUTH);
+		panel.add(username);
+		panel.add(password);
 		return panel;
 	}
 	
 	private JPanel labelPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		panel.setLayout(new GridLayout(2, 1, 0, 5));
 		JLabel emailLabel = new JLabel("Email:");
 		emailLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		JLabel passwordLabel = new JLabel("Password:");
+		JLabel passwordLabel = new JLabel("Password:  ");
 		passwordLabel.setAlignmentX(RIGHT_ALIGNMENT);
 		panel.add(emailLabel, BorderLayout.NORTH);
 		panel.add(passwordLabel, BorderLayout.SOUTH);
