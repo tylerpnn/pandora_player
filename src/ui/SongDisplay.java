@@ -17,7 +17,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import pandora.Song;

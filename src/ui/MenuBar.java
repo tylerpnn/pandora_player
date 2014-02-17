@@ -10,14 +10,9 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 public class MenuBar extends JMenuBar {
-
-	private final Frame parent;
 	
 	public MenuBar(final Frame parent) {
-		this.parent = parent;
-		
 		JMenu optionsMenu = new JMenu("Options");
-		
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

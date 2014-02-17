@@ -1,12 +1,10 @@
 package pandora;
 
-import java.awt.Font;
 import java.util.Set;
 
-import json.response.PlaylistResponse.Result.SongInfo;
-import json.response.StationListResponse.Result.StationInfo;
+import javax.swing.SwingUtilities;
+
 import pandora.api.Auth;
-import pandora.api.Station;
 import pandora.api.User;
 import player.Player;
 import ui.Frame;
@@ -19,7 +17,11 @@ public class Application {
 	private static Frame gui;
 
 	public static void main(String[] args) {
-		new Application();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new Application();
+			}
+		});
 	}
 	
 	public Application() {

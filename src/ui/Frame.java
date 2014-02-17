@@ -73,6 +73,9 @@ public class Frame extends JFrame {
 	}
 	
 	public void chooseStation(String stationName) {
+		if(songPanel != null) {
+			songPanel.removeAll();
+		}
 		app.playStation(stationName);	
 	}
 	

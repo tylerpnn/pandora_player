@@ -31,11 +31,10 @@ public class LoginDialog extends JDialog implements ActionListener {
 		
 		panel.add(labelPanel(), BorderLayout.WEST);
 		panel.add(fieldPanel(), BorderLayout.EAST);
-//		panel.add(grid(), BorderLayout.CENTER);
 		panel.add(buttonPanel(), BorderLayout.SOUTH);		
-		
-		this.setLocationRelativeTo(parent);
+
 		this.pack();
+		this.setLocationRelativeTo(parent);
 		this.setResizable(false);
 		this.setVisible(true);
 	}
@@ -48,23 +47,6 @@ public class LoginDialog extends JDialog implements ActionListener {
 		cancel.addActionListener(this);
 		panel.add(login);
 		panel.add(cancel);
-		return panel;
-	}
-	
-	private JPanel grid() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(2, 2, 0, 5));
-		JLabel emailLabel = new JLabel("Email:");
-		emailLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		JLabel passwordLabel = new JLabel("Password:");
-		passwordLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		username = new JTextField(15);	
-		password = new JPasswordField(15);
-		password.addActionListener(this);
-		panel.add(emailLabel);
-		panel.add(username);
-		panel.add(passwordLabel);
-		panel.add(password);
 		return panel;
 	}
 	
