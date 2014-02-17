@@ -4,12 +4,15 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JSlider;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import player.Player;
 import player.Player.PlayerState;
@@ -25,9 +28,10 @@ public class ToolBar extends JToolBar implements ActionListener {
 	
 	public ToolBar(Frame parent) {
 		super(HORIZONTAL);
-		this.setFloatable(false);
-		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 		this.parent = parent;
+		this.setFloatable(false);
+		this.setPreferredSize(new Dimension(parent.getWidth(), 30));
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		ClassLoader c = this.getClass().getClassLoader();
 		playIcon = new ImageIcon(c.getResource("res/play.png"));
@@ -47,8 +51,27 @@ public class ToolBar extends JToolBar implements ActionListener {
 		
 		this.add(play);
 		this.add(next);
-		this.add(Box.createHorizontalGlue());
+		this.add(volSlider());
+//		this.add(Box.createHorizontalGlue());
 		this.add(stationCombo);
+	}
+	
+	private JSlider volSlider() {
+		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+		vol.setMinimumSize(new Dimension(75, 30));
+		vol.setPreferredSize(vol.getMinimumSize());
+		vol.setFocusable(false);
+
+		vol.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ce) {
+				try {
+					Player.setVolume(vol.getValue() / 100f);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		return vol;
 	}
 	
 	public void setSelectedStation(String stationName) {
@@ -81,7 +104,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		}
 		if(e.getSource() == play) {
 			parent.playToggle();
-			buttonToggle(Player.status);
+			buttonToggle(Player.getStatus());
 		}
 	}
 }

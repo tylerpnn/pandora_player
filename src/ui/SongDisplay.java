@@ -11,7 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;

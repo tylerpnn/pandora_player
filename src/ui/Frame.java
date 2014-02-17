@@ -26,9 +26,10 @@ public class Frame extends JFrame {
 	public Frame(Application app) {
 		super("Pandora Player");
 		this.app = app;
-				
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.put("Slider.paintValue", false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +93,7 @@ public class Frame extends JFrame {
 			bar.setStations(app.getStationList());
 		}
 		bar.setSelectedStation("QuickMix");
-		bar.buttonToggle(Player.status);
+		bar.buttonToggle(Player.getStatus());
 	}
 	
 	public String[] getStationList() {

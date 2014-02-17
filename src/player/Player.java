@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
 import json.response.StationListResponse.Result.StationInfo;
@@ -32,7 +33,8 @@ public class Player {
 	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	
 	private PlayerThread playerThread;
-	public static PlayerState status;
+	private static PlayerState status;
+	private static SourceDataLine dataLine;
 	
 	public Player(Application app, UserSession user) {
 		this.app = app;
@@ -40,6 +42,7 @@ public class Player {
 		status = PlayerState.WAITING;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void playStation(StationInfo station) {
 		if(playerThread != null) {
 			playerThread.interrupt();
@@ -69,6 +72,17 @@ public class Player {
 			playerThread.play();
 		} else {
 			playerThread.pause();
+		}
+	}
+	
+	public static PlayerState getStatus() {
+		return status;
+	}
+	
+	public static void setVolume(float level) {
+		if(dataLine != null) {
+			FloatControl fc = (FloatControl) dataLine.getControl(FloatControl.Type.VOLUME);
+			fc.setValue(level * fc.getMaximum());
 		}
 	}
 	
@@ -145,7 +159,7 @@ public class Player {
 		private boolean decodeMp4(Song song) {
 			song.setPlaying(true);
 			byte[] songData = getSongData(song);
-			SourceDataLine dataLine = null;
+			dataLine = null;
 			try {
 				MP4Container cont = new MP4Container(new ByteArrayInputStream(songData));
 				Movie movie = cont.getMovie();
