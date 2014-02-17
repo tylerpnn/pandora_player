@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -52,14 +53,15 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.add(play);
 		this.add(next);
 		this.add(volSlider());
-//		this.add(Box.createHorizontalGlue());
+		this.add(Box.createHorizontalGlue());
 		this.add(stationCombo);
 	}
 	
 	private JSlider volSlider() {
 		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
-		vol.setMinimumSize(new Dimension(75, 30));
-		vol.setPreferredSize(vol.getMinimumSize());
+		vol.setMaximumSize(new Dimension(125, 30));
+		vol.setPreferredSize(vol.getMaximumSize());
+		vol.setMinimumSize(vol.getMaximumSize());
 		vol.setFocusable(false);
 
 		vol.addChangeListener(new ChangeListener() {
