@@ -51,7 +51,11 @@ public class SongPanel extends JPanel {
 				selected.setBackground(Color.white);
 			}
 		}
-		selected = sd;
-		selected.setBackground(new Color(42, 161, 235));
+		if(selected != sd) {
+			selected = sd;
+			selected.setBackground(new Color(42, 161, 235));
+		} else {
+			selected = null;
+		}
 	}
 }

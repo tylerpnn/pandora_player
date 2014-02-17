@@ -112,6 +112,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		if(e.getClickCount() == 2) {
 			//play song
+			parent.select(this);
 		} else {
 			parent.select(this);
 		}
