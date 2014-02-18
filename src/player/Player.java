@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Control;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
@@ -35,6 +36,7 @@ public class Player {
 	private PlayerThread playerThread;
 	private static PlayerState status;
 	private static SourceDataLine dataLine;
+	private static float volume = 1f;
 	
 	public Player(Application app, UserSession user) {
 		this.app = app;
@@ -80,9 +82,17 @@ public class Player {
 	}
 	
 	public static void setVolume(float level) {
+		volume = level;
 		if(dataLine != null) {
-			FloatControl fc = (FloatControl) dataLine.getControl(FloatControl.Type.VOLUME);
-			fc.setValue(level * fc.getMaximum());
+			FloatControl fc = null;
+			if(dataLine.isControlSupported(FloatControl.Type.VOLUME)) {
+				fc = (FloatControl) dataLine.getControl(FloatControl.Type.VOLUME);
+				fc.setValue(level * fc.getMaximum());
+			} else if(dataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+				fc = (FloatControl) dataLine.getControl(FloatControl.Type.MASTER_GAIN);
+				float gain = (float) ((level != 0) ? 10 * Math.log10(level) : -20f);
+				fc.setValue(gain * Math.abs(fc.getMinimum() / 20f));
+			}
 		}
 	}
 	
@@ -169,6 +179,7 @@ public class Player {
 				AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, track.getSampleSize(), track.getChannelCount(), true, true);
 				dataLine = AudioSystem.getSourceDataLine(audioFormat);
 				dataLine.open(audioFormat);
+				setVolume(volume);
 				dataLine.start();
 				Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 				dec.getConfig().setProfile(Profile.AAC_LC);
