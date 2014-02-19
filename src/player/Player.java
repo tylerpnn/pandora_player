@@ -3,15 +3,22 @@ package player;
 import java.io.DataInputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
 import json.response.StationListResponse.Result.StationInfo;
-import net.sourceforge.jaad.spi.javasound.AACAudioFileReader;
+import net.sourceforge.jaad.aac.Decoder;
+import net.sourceforge.jaad.aac.Profile;
+import net.sourceforge.jaad.aac.SampleBuffer;
+import net.sourceforge.jaad.mp4.MP4Container;
+import net.sourceforge.jaad.mp4.api.AudioTrack;
+import net.sourceforge.jaad.mp4.api.Frame;
+import net.sourceforge.jaad.mp4.api.Movie;
+import net.sourceforge.jaad.mp4.api.Track;
 import pandora.Application;
 import pandora.Song;
 import pandora.UserSession;
@@ -167,19 +174,31 @@ public class Player {
 				String url = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
 				System.out.print(song.getSongInfo().getSongName() + " ");
 				System.out.println(url);
-				AACAudioFileReader aafr = new AACAudioFileReader();
-				AudioInputStream ais = aafr.getAudioInputStream(new URL(url));
-				System.out.printf("%d\n", ais.getFrameLength());
-				dataLine = AudioSystem.getSourceDataLine(ais.getFormat());
-				dataLine.open();
+				MP4Container cont = new MP4Container(new URL(url).openStream());
+				Movie movie = cont.getMovie();
+				song.setDuration((int) movie.getDuration());
+				List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
+				AudioTrack track = (AudioTrack) tracks.get(0);
+				AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
+						track.getSampleSize(), 
+						track.getChannelCount(), true, true);
+				dataLine = AudioSystem.getSourceDataLine(audioFormat);
+				dataLine.open(audioFormat);
+				setVolume(volume);
 				dataLine.start();
-				byte[] buf = new byte[4096];
-				int bytesRead = 0;
-				while(!skip && bytesRead != -1) {
+				Decoder dec = new Decoder(track.getDecoderSpecificInfo());
+				dec.getConfig().setProfile(Profile.AAC_LC);
+				dec.getConfig().setSBREnabled(false);
+				Frame frame;
+				byte[] chunk;
+				SampleBuffer buf = new SampleBuffer();
+				while(!skip && track.hasMoreFrames()) {
 					while(!skip && paused) { sleep(100L); }
-					bytesRead = ais.read(buf, 0, buf.length);
-					if(bytesRead != -1)
-						dataLine.write(buf, 0, buf.length);
+					frame = track.readNextFrame();
+					song.update((int)frame.getTime());
+					dec.decodeFrame(frame.getData(), buf);
+					chunk = buf.getData();
+					dataLine.write(chunk, 0, chunk.length);
 				}
 				song.setPlaying(false);
 				skip = false;
@@ -194,6 +213,7 @@ public class Player {
 			}
 			return true;
 		}
+		
 	}	
 }
 
