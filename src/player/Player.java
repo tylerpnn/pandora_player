@@ -1,8 +1,6 @@
 package player;
 
-import java.io.DataInputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
@@ -12,7 +10,6 @@ import javax.sound.sampled.SourceDataLine;
 
 import json.response.StationListResponse.Result.StationInfo;
 import net.sourceforge.jaad.aac.Decoder;
-import net.sourceforge.jaad.aac.Profile;
 import net.sourceforge.jaad.aac.SampleBuffer;
 import net.sourceforge.jaad.mp4.MP4Container;
 import net.sourceforge.jaad.mp4.api.AudioTrack;
@@ -29,12 +26,19 @@ public class Player {
 
 	private UserSession user;
 	private Application app;
-	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	
-	private PlayerThread playerThread;
+	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	private static PlayerState status;
 	private static SourceDataLine dataLine;
 	private static float volume = 1f;
+
+	private Thread playerThread;
+	private boolean paused = false;
+	private boolean skip = false;
+	private StationInfo station;
+	private Song[] playlist;
+	private Song currSong;
+	private int index;
 	
 	public Player(Application app, UserSession user) {
 		this.app = app;
@@ -44,35 +48,23 @@ public class Player {
 	
 	@SuppressWarnings("deprecation")
 	public void playStation(StationInfo station) {
+		this.station = station;
 		if(playerThread != null) {
 			playerThread.interrupt();
 			playerThread.stop();
 			playerThread = null;
 		}
-		playerThread = new PlayerThread(station);
+		playerThread = new Thread(new Runnable() {
+			public void run() {
+				currSong = getNextSong();
+				while(currSong != null && decodeMp4(currSong)) {
+					currSong = getNextSong();
+				}
+			}
+		});
+		playerThread.setDaemon(true);
 		playerThread.start();
-	}
-	
-	public void skip() {
-		playerThread.skip();
-	}
-	
-	public void play() {
-		if(playerThread.isPaused())
-			playerThread.play();
-	}
-	
-	public void pause() {
-		if(!playerThread.isPaused())
-			playerThread.pause();
-	}
-	
-	public void playToggle() {
-		if(playerThread.isPaused()) {
-			playerThread.play();
-		} else {
-			playerThread.pause();
-		}
+		status = PlayerState.PLAYING;
 	}
 	
 	public static PlayerState getStatus() {
@@ -80,6 +72,7 @@ public class Player {
 	}
 	
 	public static void setVolume(float level) {
+		if(level < 0 || level > 1) throw new IllegalArgumentException("Level must be between 0 and 1");
 		volume = level;
 		if(dataLine != null) {
 			FloatControl fc = null;
@@ -93,128 +86,86 @@ public class Player {
 			}
 		}
 	}
-	
-	private class PlayerThread extends Thread {
 		
-		private boolean paused = false;
-		private boolean skip = false;
-		private StationInfo station;
-		private Song[] playlist;
-		private Song currSong;
-		private int index;
-		
-		public PlayerThread(StationInfo station) {
-			this.setDaemon(true);
-			this.station = station;
+	private Song getNextSong() {
+		if(playlist == null || index >= playlist.length) {
+			playlist = Station.getPlayList(user, station);
+			app.displaySongs(playlist);
 			index = 0;
 		}
-		
-		public void run() {
-			this.currSong = getNextSong();
-			while(currSong != null && decodeMp4(currSong)) {
-				currSong = getNextSong();
+		return playlist[index++];
+	}
+	
+	public void skip() {
+		this.skip = true;
+	}
+	
+	public boolean isPaused() {
+		return this.paused;
+	}
+	
+	public void pause() {
+		this.paused = true;
+		status = PlayerState.PAUSED;
+	}
+	
+	public void play() {
+		this.paused = false;
+		status = PlayerState.PLAYING;
+	}
+	
+	public void playToggle() {
+		if(paused)
+			play();
+		else
+			pause();
+	}
+	
+	private boolean decodeMp4(Song song) {
+		song.setPlaying(true);
+		dataLine = null;
+		try {
+			String url = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
+			System.out.print(song.getSongInfo().getSongName() + " ");
+			System.out.println(url);
+			MP4Container cont = new MP4Container(new URL(url).openStream());
+			Movie movie = cont.getMovie();
+			song.setDuration((int) movie.getDuration());
+			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
+			AudioTrack track = (AudioTrack) tracks.get(0);
+			AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
+					track.getSampleSize(), 
+					track.getChannelCount(), true, true);
+			dataLine = AudioSystem.getSourceDataLine(audioFormat);
+			dataLine.open(audioFormat);
+			setVolume(volume);
+			dataLine.start();
+			Decoder dec = new Decoder(track.getDecoderSpecificInfo());
+			dec.getConfig().setSBREnabled(false);
+			Frame frame;
+			byte[] chunk;
+			SampleBuffer buf = new SampleBuffer();
+			while(!skip && track.hasMoreFrames()) {
+				while(!skip && paused) { Thread.sleep(100L); }
+				frame = track.readNextFrame();
+				song.update((int)frame.getTime());
+				dec.decodeFrame(frame.getData(), buf);
+				chunk = buf.getData();
+				dataLine.write(chunk, 0, chunk.length);
 			}
+			song.setPlaying(false);
+			skip = false;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if(dataLine != null) {
+				dataLine.stop();
+				dataLine.close();
+			}				
 		}
-		
-		private Song getNextSong() {
-			if(playlist == null || index >= playlist.length) {
-				playlist = Station.getPlayList(user, station);
-				app.displaySongs(playlist);
-				index = 0;
-			}
-			return playlist[index++];
-		}
-			
-		private byte[] getSongData(Song song) {
-			System.out.println(song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl());
-			URL url;
-			URLConnection con;
-			DataInputStream dis;
-			byte[] data = null;
-			try {
-				url = new URL(song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl());
-				con = url.openConnection();
-				dis = new DataInputStream(con.getInputStream());
-				data = new byte[con.getContentLength()];
-				System.out.println(con.getContentLength());
-				for(int i=0; i < data.length; i++) {
-					data[i] = dis.readByte();
-					System.out.printf("i: %d, b: %d\n", i, data[i]);
-				}
-				System.out.println("hi");
-				dis.close();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			return data;
-		}
-		
-		public void skip() {
-			this.skip = true;
-		}
-		
-		public boolean isPaused() {
-			return this.paused;
-		}
-		
-		public void pause() {
-			this.paused = true;
-			status = PlayerState.PAUSED;
-		}
-		
-		public void play() {
-			this.paused = false;
-			status = PlayerState.PLAYING;
-		}
-		
-		private boolean decodeMp4(Song song) {
-			song.setPlaying(true);
-			dataLine = null;
-			try {
-				String url = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
-				System.out.print(song.getSongInfo().getSongName() + " ");
-				System.out.println(url);
-				MP4Container cont = new MP4Container(new URL(url).openStream());
-				Movie movie = cont.getMovie();
-				song.setDuration((int) movie.getDuration());
-				List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
-				AudioTrack track = (AudioTrack) tracks.get(0);
-				AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
-						track.getSampleSize(), 
-						track.getChannelCount(), true, true);
-				dataLine = AudioSystem.getSourceDataLine(audioFormat);
-				dataLine.open(audioFormat);
-				setVolume(volume);
-				dataLine.start();
-				Decoder dec = new Decoder(track.getDecoderSpecificInfo());
-				dec.getConfig().setProfile(Profile.AAC_LC);
-				dec.getConfig().setSBREnabled(false);
-				Frame frame;
-				byte[] chunk;
-				SampleBuffer buf = new SampleBuffer();
-				while(!skip && track.hasMoreFrames()) {
-					while(!skip && paused) { sleep(100L); }
-					frame = track.readNextFrame();
-					song.update((int)frame.getTime());
-					dec.decodeFrame(frame.getData(), buf);
-					chunk = buf.getData();
-					dataLine.write(chunk, 0, chunk.length);
-				}
-				song.setPlaying(false);
-				skip = false;
-			} catch(Exception e) {
-				e.printStackTrace();
-				return false;
-			} finally {
-				if(dataLine != null) {
-					dataLine.stop();
-					dataLine.close();
-				}				
-			}
-			return true;
-		}
-		
-	}	
+		return true;
+	}
 }
 
 

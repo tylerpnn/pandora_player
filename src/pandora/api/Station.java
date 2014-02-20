@@ -1,6 +1,9 @@
 package pandora.api;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,16 @@ public class Station {
 		} catch (IOException | PandoraServerException e) {
 			e.printStackTrace();
 		}
+//		String json = req.getResponse().replace("{", "\n{\n");
+//		json = json.replace("}", "\n}\n");
+//		json = json.replace(",", ",\n");
+//		try {
+//			PrintWriter w = new PrintWriter(new File(Long.toString(plreq.getSyncTime())));
+//			w.write(json, 0, json.length());
+//			w.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 		List<Song> songs = new ArrayList<>();
 		for(SongInfo songInfo : plres.getSongs()) {
 			if(songInfo.getSongIdentity() == null) continue;
