@@ -46,14 +46,13 @@ public class Player {
 		status = PlayerState.WAITING;
 	}
 	
-	@SuppressWarnings("deprecation")
+	public static PlayerState getStatus() {
+		return status;
+	}
+	
 	public void playStation(StationInfo station) {
+		this.stop();
 		this.station = station;
-		if(playerThread != null) {
-			playerThread.interrupt();
-			playerThread.stop();
-			playerThread = null;
-		}
 		playerThread = new Thread(new Runnable() {
 			public void run() {
 				currSong = getNextSong();
@@ -67,34 +66,16 @@ public class Player {
 		status = PlayerState.PLAYING;
 	}
 	
-	public static PlayerState getStatus() {
-		return status;
+	public void stop() {
+		if(playerThread != null) {
+			playerThread.interrupt();
+			playerThread.stop();
+			playerThread = null;
+		}
+		station = null;
+		playlist = null;
 	}
 	
-	public static void setVolume(float level) {
-		if(level < 0 || level > 1) throw new IllegalArgumentException("Level must be between 0 and 1");
-		volume = level;
-		if(dataLine != null) {
-			FloatControl fc = null;
-			if(dataLine.isControlSupported(FloatControl.Type.VOLUME)) {
-				fc = (FloatControl) dataLine.getControl(FloatControl.Type.VOLUME);
-				fc.setValue(level * fc.getMaximum());
-			} else if(dataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-				fc = (FloatControl) dataLine.getControl(FloatControl.Type.MASTER_GAIN);
-				float gain = (float) ((level != 0) ? 10 * Math.log10(level) : -20f);
-				fc.setValue(gain * Math.abs(fc.getMinimum() / 20f));
-			}
-		}
-	}
-		
-	private Song getNextSong() {
-		if(playlist == null || index >= playlist.length) {
-			playlist = Station.getPlayList(user, station);
-			app.displaySongs(playlist);
-			index = 0;
-		}
-		return playlist[index++];
-	}
 	
 	public void skip() {
 		this.skip = true;
@@ -119,6 +100,32 @@ public class Player {
 			play();
 		else
 			pause();
+	}
+	
+	public synchronized static void setVolume(float level) {
+		if(level < 0) level = 0;
+		if(level > 1) level = 1;
+		volume = level;
+		if(dataLine != null) {
+			FloatControl fc = null;
+			if(dataLine.isControlSupported(FloatControl.Type.VOLUME)) {
+				fc = (FloatControl) dataLine.getControl(FloatControl.Type.VOLUME);
+				fc.setValue(level * fc.getMaximum());
+			} else if(dataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+				fc = (FloatControl) dataLine.getControl(FloatControl.Type.MASTER_GAIN);
+				float gain = (float) ((level != 0) ? 10 * Math.log10(level) : -20f);
+				fc.setValue(gain * Math.abs(fc.getMinimum() / 20f));
+			}
+		}
+	}
+	
+	private Song getNextSong() {
+		if(playlist == null || index >= playlist.length) {
+			playlist = Station.getPlayList(user, station);
+			app.displaySongs(playlist);
+			index = 0;
+		}
+		return playlist[index++];
 	}
 	
 	private boolean decodeMp4(Song song) {
@@ -161,17 +168,10 @@ public class Player {
 		} finally {
 			if(dataLine != null) {
 				dataLine.stop();
-				dataLine.close();
+				if(dataLine.isOpen())
+					dataLine.close();
 			}				
 		}
 		return true;
 	}
 }
-
-
-
-
-
-
-
-

@@ -22,6 +22,7 @@ public class Frame extends JFrame {
 	private ToolBar bar;
 	private SongPanel songPanel;
 	private JScrollPane scrollPane;
+	private MenuBar menuBar;
 	
 	public Frame(Application app) {
 		super("Pandora Player");
@@ -54,7 +55,8 @@ public class Frame extends JFrame {
 	}
 	
 	public void initComponents() {
-		this.setJMenuBar(new MenuBar(this));
+		menuBar = new MenuBar(this);
+		this.setJMenuBar(menuBar);
 		bar = new ToolBar(this);
 		panel.add(bar, BorderLayout.SOUTH);
 		songPanel = new SongPanel(this);
@@ -91,9 +93,20 @@ public class Frame extends JFrame {
 	public void login(String username, char[] password) {
 		if(app.login(username, password)) {
 			bar.setStations(app.getStationList());
+			menuBar.loggedIn();
 		}
 		bar.setSelectedStation("QuickMix");
 		bar.buttonToggle(Player.getStatus());
+	}
+	
+	public void logout() {
+		app.logout();
+		songPanel.removeAll();
+		songPanel = new SongPanel(this);
+		bar.setStations(new String[0]);
+		repaint();
+		validate();
+		menuBar.loggedOut();
 	}
 	
 	public String[] getStationList() {

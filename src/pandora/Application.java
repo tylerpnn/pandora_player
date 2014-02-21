@@ -37,6 +37,12 @@ public class Application {
 		return true;
 	}
 	
+	public void logout() {
+		this.user = null;
+		player.stop();
+		player = null;
+	}
+	
 	public void playStation(String stationName) {
 		player.playStation(user.getStationInfo(stationName));
 	}
@@ -57,7 +63,7 @@ public class Application {
 	
 	public String[]	getStationList() {
 		Set<String> stations = null;
-		if(user != null) {
+		if(user != null && user.getStations() != null) {
 			stations = user.getStations().keySet();
 			return stations.toArray(new String[stations.size()]);
 		} else {
@@ -65,13 +71,3 @@ public class Application {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-

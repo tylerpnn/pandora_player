@@ -9,6 +9,6 @@ public class ErrorHandler {
 	}
 	
 	public static void errorCheck(int errorCode) throws PandoraServerException {
-		throw new PandoraServerException("stat: fail, code: " + errorCode);
+		throw new PandoraServerException("Status: fail, Code: " + errorCode);
 	}
 }
