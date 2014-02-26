@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,7 +16,7 @@ import javax.swing.UIManager;
 import pandora.Song;
 import player.Player;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements WindowListener {
 
 	private JPanel panel;
 	private Application app;
@@ -33,22 +35,21 @@ public class Frame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.setIconImage(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(500, 400));
 		this.setSize(this.getPreferredSize());
+		
 		Rectangle bounds = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		int x = bounds.width/2 - this.getSize().width/2;
 		int y = bounds.height/2 - this.getSize().height/2;
 		this.setLocation(new Point(x, y));
 		
 		panel = new JPanel();
-		this.getContentPane().add(panel);
 		panel.setLayout(new BorderLayout());
-		initComponents();		
+		this.getContentPane().add(panel);
+		initComponents();
 		
-		repaint();
-		validate();
+		this.addWindowListener(this);
 		this.setResizable(false);
 		this.setVisible(true);	
 	}
@@ -113,5 +114,23 @@ public class Frame extends JFrame {
 	
 	public String[] getStationList() {
 		return app.getStationList();
+	}	
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		repaint();		
 	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {}
+	@Override
+	public void windowClosed(WindowEvent arg0) {}
+	@Override
+	public void windowClosing(WindowEvent arg0) {}
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {}
+	@Override
+	public void windowIconified(WindowEvent arg0) {}
+	@Override
+	public void windowOpened(WindowEvent arg0) {}
 }

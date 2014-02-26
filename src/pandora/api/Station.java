@@ -1,16 +1,9 @@
 package pandora.api;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.jaad.mp4.MP4Container;
-import net.sourceforge.jaad.mp4.api.Movie;
 import json.request.PlaylistRequest;
 import json.response.PlaylistResponse;
 import json.response.PlaylistResponse.Result.SongInfo;
@@ -43,6 +36,7 @@ public class Station {
 				ErrorHandler.errorCheck(plres.getCode());
 			}
 		} catch (IOException | PandoraServerException e) {
+			ErrorHandler.logJSONError(req.getResponse());
 			e.printStackTrace();
 		}
 		List<Song> songs = new ArrayList<>();

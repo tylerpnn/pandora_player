@@ -49,7 +49,8 @@ public class Song {
 	
 	public void setPlaying(boolean b) {
 		this.playing = b;
-		display.setPlaying(b);
+		if(display != null)
+			display.setPlaying(b);
 	}
 	
 	public void setIsAd(boolean b) {

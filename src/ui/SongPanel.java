@@ -25,7 +25,7 @@ public class SongPanel extends JPanel {
 	}
 	
 	public void scroll(SongDisplay sd) {
-		if(sd.getLocation().y + 104 >= this.getHeight()) {
+		if(sd.getLocation().y + sd.getHeight() >= this.getHeight()) {
 			parent.getScrollBar().setValue(sd.getLocation().y);
 		}
 	}

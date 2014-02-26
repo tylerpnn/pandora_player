@@ -34,6 +34,7 @@ public class Auth {
 				ErrorHandler.errorCheck(plres.getCode());
 			}
 		} catch (IOException | PandoraServerException e) {
+			ErrorHandler.logJSONError(req.getResponse());
 			e.printStackTrace();
 		}
 		Crypt c = new Crypt();
@@ -60,6 +61,7 @@ public class Auth {
 				ErrorHandler.errorCheck(ulres.getCode());
 			}
 		} catch(IOException | PandoraServerException e) {
+			ErrorHandler.logJSONError(req.getResponse());
 			e.printStackTrace();
 		}
 		user.setUserAuthToken(ulres.getUserAuthToken());

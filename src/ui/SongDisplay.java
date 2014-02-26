@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import pandora.Song;
@@ -23,7 +22,6 @@ public class SongDisplay extends JPanel implements MouseListener {
 	private SongPanel parent;
 	private Song song;
 	private BufferedImage albumArt;
-	JLabel l;
 	
 	public SongDisplay(SongPanel parent, Song song) {
 		this.setPreferredSize(new Dimension(parent.getWidth(), 104));
@@ -45,8 +43,6 @@ public class SongDisplay extends JPanel implements MouseListener {
 			}
 		}
 		this.addMouseListener(this);
-		l = new JLabel("");
-		add(l);
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -84,7 +80,6 @@ public class SongDisplay extends JPanel implements MouseListener {
 		} else {
 			setBackground(Color.white);
 		}
-		update();
 	}
 	
 	public Song getSong() {
@@ -97,18 +92,11 @@ public class SongDisplay extends JPanel implements MouseListener {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
+	public void mouseEntered(MouseEvent arg0) {}
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
+	public void mouseExited(MouseEvent arg0) {}
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-	}
-
+	public void mousePressed(MouseEvent arg0) {}
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-	}
+	public void mouseReleased(MouseEvent arg0) {}
 }
