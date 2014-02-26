@@ -1,5 +1,6 @@
 package player;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -16,10 +17,10 @@ import net.sourceforge.jaad.mp4.api.AudioTrack;
 import net.sourceforge.jaad.mp4.api.Frame;
 import net.sourceforge.jaad.mp4.api.Movie;
 import net.sourceforge.jaad.mp4.api.Track;
-import pandora.Application;
 import pandora.Song;
 import pandora.UserSession;
 import pandora.api.Station;
+import ui.Application;
 
 
 public class Player {
@@ -30,11 +31,12 @@ public class Player {
 	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	private static PlayerState status;
 	private static SourceDataLine dataLine;
-	private static float volume = 1f;
+	private static float volume = .75f;
 
 	private Thread playerThread;
 	private boolean paused = false;
 	private boolean skip = false;
+	private boolean stop = false;
 	private StationInfo station;
 	private Song[] playlist;
 	private Song currSong;
@@ -50,13 +52,13 @@ public class Player {
 		return status;
 	}
 	
-	public void playStation(StationInfo station) {
+	public synchronized void playStation(StationInfo station) {
 		this.stop();
 		this.station = station;
 		playerThread = new Thread(new Runnable() {
 			public void run() {
 				currSong = getNextSong();
-				while(currSong != null && decodeMp4(currSong)) {
+				while(!stop && currSong != null && decodeMp4(currSong)) {
 					currSong = getNextSong();
 				}
 			}
@@ -66,31 +68,34 @@ public class Player {
 		status = PlayerState.PLAYING;
 	}
 	
-	public void stop() {
+	public synchronized void stop() {
 		if(playerThread != null) {
-			playerThread.interrupt();
-			playerThread.stop();
+			this.stop = true;
+			try {
+				playerThread.join();
+			} catch (InterruptedException e) {}
 			playerThread = null;
+			this.stop = false;
 		}
 		station = null;
 		playlist = null;
 	}
 	
 	
-	public void skip() {
+	public synchronized void skip() {
 		this.skip = true;
 	}
 	
-	public boolean isPaused() {
+	public synchronized boolean isPaused() {
 		return this.paused;
 	}
 	
-	public void pause() {
+	public synchronized void pause() {
 		this.paused = true;
 		status = PlayerState.PAUSED;
 	}
 	
-	public void play() {
+	public synchronized void play() {
 		this.paused = false;
 		status = PlayerState.PLAYING;
 	}
@@ -122,20 +127,21 @@ public class Player {
 	private Song getNextSong() {
 		if(playlist == null || index >= playlist.length) {
 			playlist = Station.getPlayList(user, station);
-			app.displaySongs(playlist);
 			index = 0;
 		}
 		return playlist[index++];
 	}
 	
 	private boolean decodeMp4(Song song) {
+		app.displaySong(song);
 		song.setPlaying(true);
 		dataLine = null;
+		float oldVol = volume;
 		try {
-			String url = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
-			System.out.print(song.getSongInfo().getSongName() + " ");
-			System.out.println(url);
-			MP4Container cont = new MP4Container(new URL(url).openStream());
+			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
+			URL url = new URL(audioURL);
+			InputStream in = url.openStream();
+			MP4Container cont = new MP4Container(in);
 			Movie movie = cont.getMovie();
 			song.setDuration((int) movie.getDuration());
 			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
@@ -145,31 +151,32 @@ public class Player {
 					track.getChannelCount(), true, true);
 			dataLine = AudioSystem.getSourceDataLine(audioFormat);
 			dataLine.open(audioFormat);
-			setVolume(volume);
+			setVolume(song.isAd() ? 0f : volume);
 			dataLine.start();
 			Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 			dec.getConfig().setSBREnabled(false);
 			Frame frame;
 			byte[] chunk;
 			SampleBuffer buf = new SampleBuffer();
-			while(!skip && track.hasMoreFrames()) {
-				while(!skip && paused) { Thread.sleep(100L); }
+			while(!stop && !skip && track.hasMoreFrames()) {
+				while(!skip && paused) { }
 				frame = track.readNextFrame();
 				song.update((int)frame.getTime());
 				dec.decodeFrame(frame.getData(), buf);
 				chunk = buf.getData();
 				dataLine.write(chunk, 0, chunk.length);
 			}
-			song.setPlaying(false);
 			skip = false;
+			song.setPlaying(false);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
+			if(song.isAd())
+				volume = oldVol;
 			if(dataLine != null) {
 				dataLine.stop();
-				if(dataLine.isOpen())
-					dataLine.close();
+				dataLine.close();
 			}				
 		}
 		return true;

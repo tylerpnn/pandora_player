@@ -1,13 +1,14 @@
-package pandora;
+package ui;
 
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import pandora.Song;
+import pandora.UserSession;
 import pandora.api.Auth;
 import pandora.api.User;
 import player.Player;
-import ui.Frame;
 
 
 public class Application {
@@ -57,8 +58,8 @@ public class Application {
 			player.playToggle();
 	}
 	
-	public void displaySongs(Song[] playlist) {
-		gui.displaySongs(playlist);
+	public void displaySong(Song song) {
+		gui.displaySong(song);
 	}
 	
 	public String[]	getStationList() {

@@ -31,7 +31,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		super(HORIZONTAL);
 		this.parent = parent;
 		this.setFloatable(false);
-		this.setPreferredSize(new Dimension(parent.getWidth(), 30));
+		this.setPreferredSize(new Dimension(parent.getWidth(), 31));
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		ClassLoader c = this.getClass().getClassLoader();
@@ -58,7 +58,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 	}
 	
 	private JSlider volSlider() {
-		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
+		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 75);
 		vol.setMaximumSize(new Dimension(125, 30));
 		vol.setPreferredSize(vol.getMaximumSize());
 		vol.setMinimumSize(vol.getMaximumSize());

@@ -11,7 +11,6 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
-import pandora.Application;
 import pandora.Song;
 import player.Player;
 
@@ -34,7 +33,7 @@ public class Frame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		this.setIconImage(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(500, 400));
 		this.setSize(this.getPreferredSize());
@@ -63,23 +62,27 @@ public class Frame extends JFrame {
 		scrollPane = new JScrollPane(songPanel, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panel.add(scrollPane);
+		panel.add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	public JScrollBar getScrollBar() {
 		return scrollPane.getVerticalScrollBar();
 	}
 	
-	public void displaySongs(Song[] playlist) {
-		songPanel.addSongs(playlist);
-		this.validate();
+	public void displaySong(Song song) {
+		songPanel.addSong(song);
+		revalidate();
+		if(!song.isAd()) {
+			this.setTitle(String.format("%s - %s", song.getSongInfo().getSongName(), 
+					song.getSongInfo().getArtistName()));
+		}
 	}
 	
 	public void chooseStation(String stationName) {
 		if(songPanel != null) {
 			songPanel.removeAll();
 		}
-		app.playStation(stationName);	
+		app.playStation(stationName);
 	}
 	
 	public void skipSong() {
@@ -102,10 +105,9 @@ public class Frame extends JFrame {
 	public void logout() {
 		app.logout();
 		songPanel.removeAll();
-		songPanel = new SongPanel(this);
+		songPanel.repaint();
 		bar.setStations(new String[0]);
-		repaint();
-		validate();
+		this.setTitle("Pandora Player");
 		menuBar.loggedOut();
 	}
 	

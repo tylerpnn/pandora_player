@@ -10,6 +10,7 @@ public class Song {
 	private int duration;
 	private int time;
 	private SongDisplay display;
+	private boolean isAd;
 	
 	public Song(SongInfo songInfo) {
 		this.songInfo = songInfo;
@@ -33,6 +34,7 @@ public class Song {
 	
 	public void setDuration(int t) {
 		this.duration = t;
+		this.setIsAd(t <= 45);
 	}
 	
 	public void update(int time) {
@@ -47,8 +49,15 @@ public class Song {
 	
 	public void setPlaying(boolean b) {
 		this.playing = b;
-		if(display != null)
-			display.setPlaying(b);
+		display.setPlaying(b);
+	}
+	
+	public void setIsAd(boolean b) {
+		this.isAd = b;
+	}
+	
+	public boolean isAd() {
+		return this.isAd;
 	}
 	
 	public void setDisplay(SongDisplay display) {
