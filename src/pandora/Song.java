@@ -34,7 +34,7 @@ public class Song {
 	
 	public void setDuration(int t) {
 		this.duration = t;
-		this.setIsAd(t <= 45);
+		this.setIsAd(t <= 30);
 	}
 	
 	public void update(int time) {

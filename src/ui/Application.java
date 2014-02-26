@@ -16,6 +16,8 @@ public class Application {
 	private UserSession user;
 	private Player player;
 	private static Frame gui;
+	
+	public static boolean muteAds = true;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

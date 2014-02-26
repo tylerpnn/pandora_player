@@ -57,12 +57,17 @@ public class SongDisplay extends JPanel implements MouseListener {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.setFont(new Font("default", Font.BOLD, 14));
-        g.drawString(song.getSongInfo().getSongName(), 114, 20);
-        g.setFont(new Font("default", Font.PLAIN, 12));
-        g.drawString("by " + song.getSongInfo().getArtistName(), 114, 35);
-        g.drawString("on " + song.getSongInfo().getAlbumName(), 114, 50);
+        if(song.isAd()) {
+        	g.drawString("Advertisement", 114, 20);
+        } else {
+	        g.drawString(song.getSongInfo().getSongName(), 114, 20);
+	        g.setFont(new Font("default", Font.PLAIN, 12));
+	        g.drawString("by " + song.getSongInfo().getArtistName(), 114, 35);
+	        g.drawString("on " + song.getSongInfo().getAlbumName(), 114, 50);
+        }
         if(song.isPlaying()) {
-        	g.drawString(String.format("%d:%02d / %d:%02d", song.getTime() / 60,
+        	g.drawString(String.format("%d:%02d / %d:%02d", 
+        			song.getTime() / 60,
         			song.getTime() % 60,
         			song.getDuration() / 60,
         			song.getDuration() % 60), 114, 90);

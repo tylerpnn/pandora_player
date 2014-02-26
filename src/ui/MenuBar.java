@@ -1,9 +1,11 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -12,6 +14,7 @@ import javax.swing.KeyStroke;
 public class MenuBar extends JMenuBar {
 	
 	private JMenuItem login;
+	private JCheckBoxMenuItem muteAds;
 	private ActionListener logoutListener;
 	private ActionListener loginListener;
 	private JMenu optionsMenu;
@@ -42,7 +45,16 @@ public class MenuBar extends JMenuBar {
 		login.addActionListener(loginListener);
 		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 		
+		muteAds = new JCheckBoxMenuItem("Mute Ads", true);
+		muteAds.setForeground(Color.black);
+		muteAds.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Application.muteAds = muteAds.getState();
+			}
+		});
+		
 		optionsMenu.add(login);
+		optionsMenu.add(muteAds);
 		optionsMenu.add(exit);
 		this.add(optionsMenu);
 	}

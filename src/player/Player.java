@@ -133,17 +133,18 @@ public class Player {
 	}
 	
 	private boolean decodeMp4(Song song) {
-		app.displaySong(song);
-		song.setPlaying(true);
 		dataLine = null;
 		float oldVol = volume;
 		try {
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
+			System.out.println(audioURL);
 			URL url = new URL(audioURL);
 			InputStream in = url.openStream();
 			MP4Container cont = new MP4Container(in);
 			Movie movie = cont.getMovie();
 			song.setDuration((int) movie.getDuration());
+			app.displaySong(song);
+			song.setPlaying(true);
 			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
 			AudioTrack track = (AudioTrack) tracks.get(0);
 			AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
@@ -151,7 +152,7 @@ public class Player {
 					track.getChannelCount(), true, true);
 			dataLine = AudioSystem.getSourceDataLine(audioFormat);
 			dataLine.open(audioFormat);
-			setVolume(song.isAd() ? 0f : volume);
+			setVolume(song.isAd() && Application.muteAds ? 0f : volume);
 			dataLine.start();
 			Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 			dec.getConfig().setSBREnabled(false);

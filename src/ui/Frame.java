@@ -73,8 +73,12 @@ public class Frame extends JFrame implements WindowListener {
 	public void displaySong(Song song) {
 		songPanel.addSong(song);
 		revalidate();
-		if(!song.isAd()) {
-			this.setTitle(String.format("%s - %s", song.getSongInfo().getSongName(), 
+		repaint();
+		if(song.isAd()) {
+			this.setTitle("Advertisement");
+		} else {
+			this.setTitle(String.format("%s - %s", 
+					song.getSongInfo().getSongName(), 
 					song.getSongInfo().getArtistName()));
 		}
 	}
@@ -106,7 +110,7 @@ public class Frame extends JFrame implements WindowListener {
 	public void logout() {
 		app.logout();
 		songPanel.removeAll();
-		songPanel.repaint();
+		repaint();
 		bar.setStations(new String[0]);
 		this.setTitle("Pandora Player");
 		menuBar.loggedOut();
