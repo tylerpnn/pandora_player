@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 import pandora.Song;
 import pandora.UserSession;
 import pandora.api.Auth;
+import pandora.api.Station;
 import pandora.api.User;
 import player.Player;
 
@@ -62,6 +63,12 @@ public class Application {
 	
 	public void displaySong(Song song) {
 		gui.displaySong(song);
+	}
+	
+	public void setFeedback(Song song, int feedback) {
+		Station.addFeedback(user, song.getSongInfo(), (feedback > 0));
+		if(feedback < 0)
+			skipSong();
 	}
 	
 	public String[]	getStationList() {

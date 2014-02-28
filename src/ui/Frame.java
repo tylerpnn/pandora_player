@@ -116,6 +116,10 @@ public class Frame extends JFrame implements WindowListener {
 		menuBar.loggedOut();
 	}
 	
+	public void setFeedback(Song song, int feedback) {
+		app.setFeedback(song, feedback);
+	}
+	
 	public String[] getStationList() {
 		return app.getStationList();
 	}	

@@ -91,11 +91,12 @@ public class PlaylistResponse extends JSONResponse {
 				
 			}
 			
-			private String songIdentity, trackToken, 
+			private String songIdentity, trackToken, stationId, 
 				artistName, albumName, albumArtUrl, artistDetailUrl,
 				albumIdentity, songName, albumDetailUrl, songDetailUrl;
 			
 			private AudioUrlMap audioUrlMap;
+			private int songRating;
 
 			public String getSongIdentity() {
 				return songIdentity;
@@ -183,6 +184,22 @@ public class PlaylistResponse extends JSONResponse {
 
 			public void setAudioUrlMap(AudioUrlMap audioUrlMap) {
 				this.audioUrlMap = audioUrlMap;
+			}
+
+			public int getSongRating() {
+				return songRating;
+			}
+
+			public void setSongRating(int songRating) {
+				this.songRating = songRating;
+			}
+
+			public String getStationId() {
+				return stationId;
+			}
+
+			public void setStationId(String stationId) {
+				this.stationId = stationId;
 			}
 		}
 		

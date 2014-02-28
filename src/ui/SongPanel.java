@@ -45,4 +45,8 @@ public class SongPanel extends JPanel {
 			selected = null;
 		}
 	}
+	
+	public void setFeedback(Song song, int feedback) {
+		parent.setFeedback(song, feedback);
+	}
 }

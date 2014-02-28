@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,6 +15,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import pandora.Song;
 
@@ -22,6 +24,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 	private SongPanel parent;
 	private Song song;
 	private BufferedImage albumArt;
+	private ContextMenu contextMenu;
 	
 	public SongDisplay(SongPanel parent, Song song) {
 		this.setPreferredSize(new Dimension(parent.getWidth(), 104));
@@ -30,6 +33,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 		this.parent = parent;
 		this.song = song;
 		this.setBackground(Color.white);
+		if(song.isAd()) song.getSongInfo().setAlbumArtUrl("");
 		try {
 			String url = song.getSongInfo().getAlbumArtUrl();
 			albumArt = ImageIO.read(new URL(url));			
@@ -43,6 +47,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 			}
 		}
 		this.addMouseListener(this);
+		contextMenu = new ContextMenu(song, this);
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -56,12 +61,11 @@ public class SongDisplay extends JPanel implements MouseListener {
         ((Graphics2D)g).setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setFont(new Font("default", Font.BOLD, 14));
-        if(song.isAd()) {
-        	g.drawString("Advertisement", 114, 20);
-        } else {
-	        g.drawString(song.getSongInfo().getSongName(), 114, 20);
-	        g.setFont(new Font("default", Font.PLAIN, 12));
+        g.setFont(new Font("default", Font.BOLD, 14));       
+        g.drawString((song.isAd()) ? 
+        		"Advertisement" : song.getSongInfo().getSongName(), 114, 20);
+        g.setFont(new Font("default", Font.PLAIN, 12));
+        if(!song.isAd()) {
 	        g.drawString("by " + song.getSongInfo().getArtistName(), 114, 35);
 	        g.drawString("on " + song.getSongInfo().getAlbumName(), 114, 50);
         }
@@ -71,6 +75,14 @@ public class SongDisplay extends JPanel implements MouseListener {
         			song.getTime() % 60,
         			song.getDuration() / 60,
         			song.getDuration() % 60), 114, 90);
+        }
+        if(song.getSongInfo().getSongRating() != 0) {
+        	g.setColor((song.getSongInfo().getSongRating() > 0) 
+        			? Color.orange : new Color(187, 187, 242));
+        	Polygon p = new Polygon( new int[] { getWidth()-30, getWidth(), getWidth() },
+        							 new int[] { getHeight(), getHeight()-30, getHeight() },
+        							 3);
+        	g.fillPolygon(p);
         }
     }
 	
@@ -90,9 +102,18 @@ public class SongDisplay extends JPanel implements MouseListener {
 	public Song getSong() {
 		return this.song;
 	}
+	
+	public void setFeedback(int feedback) {
+		parent.setFeedback(song, feedback);
+		song.getSongInfo().setSongRating(feedback);
+		update();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(SwingUtilities.isRightMouseButton(e) && !song.isAd()) {
+			contextMenu.show(e.getComponent(), e.getPoint().x, e.getPoint().y);
+		}
 		parent.select(this);
 	}
 

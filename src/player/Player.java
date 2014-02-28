@@ -150,17 +150,17 @@ public class Player {
 			AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
 					track.getSampleSize(), 
 					track.getChannelCount(), true, true);
-			dataLine = AudioSystem.getSourceDataLine(audioFormat);
-			dataLine.open(audioFormat);
-			setVolume(song.isAd() && Application.muteAds ? 0f : volume);
-			dataLine.start();
 			Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 			dec.getConfig().setSBREnabled(false);
+			dataLine = AudioSystem.getSourceDataLine(audioFormat);
+			dataLine.open(audioFormat);
+			dataLine.start();
+			setVolume(song.isAd() && Application.muteAds ? 0f : volume);
 			Frame frame;
 			byte[] chunk;
 			SampleBuffer buf = new SampleBuffer();
 			while(!stop && !skip && track.hasMoreFrames()) {
-				while(!skip && paused) { }
+				while(!skip && paused) { Thread.sleep(100l); }
 				frame = track.readNextFrame();
 				song.update((int)frame.getTime());
 				dec.decodeFrame(frame.getData(), buf);
