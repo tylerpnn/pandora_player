@@ -18,6 +18,7 @@ public class ContextMenu extends JPopupMenu {
 	
 	private JMenuItem like;
 	private JMenuItem dislike;
+	private JMenuItem explain;
 	
 	public ContextMenu(Song song, SongDisplay display) {
 		this.sd = display;
@@ -35,10 +36,22 @@ public class ContextMenu extends JPopupMenu {
 				setFeedback(-1);
 			}
 		});
+		
+		explain = new JMenuItem("Explain track");
+		explain.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				explain();
+			}
+		});
 		this.add(like);
 		this.add(dislike);
+		this.add(explain);
 		this.setPreferredSize(new Dimension(100, getComponentCount() * 20));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
+	
+	private void explain() {
+		sd.explainTrack();
 	}
 	
 	private void setFeedback(int feedback) {

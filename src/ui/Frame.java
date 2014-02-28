@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -120,9 +121,16 @@ public class Frame extends JFrame implements WindowListener {
 		app.setFeedback(song, feedback);
 	}
 	
+	public void explainTrack(Song song) {
+		JOptionPane.showMessageDialog(this,
+				app.getExplanation(song),
+				song.getSongInfo().getSongName(),
+				JOptionPane.DEFAULT_OPTION);
+	}
+	
 	public String[] getStationList() {
 		return app.getStationList();
-	}	
+	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {

@@ -8,6 +8,7 @@ import pandora.Song;
 import pandora.UserSession;
 import pandora.api.Auth;
 import pandora.api.Station;
+import pandora.api.Track;
 import pandora.api.User;
 import player.Player;
 
@@ -69,6 +70,17 @@ public class Application {
 		Station.addFeedback(user, song.getSongInfo(), (feedback > 0));
 		if(feedback < 0)
 			skipSong();
+	}
+	
+	public String getExplanation(Song song) {
+		String res = "This track was selected because it features ";
+		String[] traits = Track.explainTrack(user, song.getSongInfo());
+		for(int i=0; i<traits.length-1; i++) {
+			res += traits[i] + ", ";
+			if(i % 2 == 0)
+				res += "\n";
+		}
+		return res.substring(0, res.length()-3) + ".";
 	}
 	
 	public String[]	getStationList() {

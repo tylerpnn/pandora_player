@@ -108,6 +108,10 @@ public class SongDisplay extends JPanel implements MouseListener {
 		song.getSongInfo().setSongRating(feedback);
 		update();
 	}
+	
+	public void explainTrack() {
+		parent.explainTrack(song);
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

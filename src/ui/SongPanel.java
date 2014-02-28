@@ -49,4 +49,8 @@ public class SongPanel extends JPanel {
 	public void setFeedback(Song song, int feedback) {
 		parent.setFeedback(song, feedback);
 	}
+	
+	public void explainTrack(Song song) {
+		parent.explainTrack(song);
+	}
 }
