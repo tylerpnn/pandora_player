@@ -37,7 +37,7 @@ public class Station {
 				ErrorHandler.errorCheck(plres.getCode());
 			}
 		} catch (IOException | PandoraServerException e) {
-			ErrorHandler.logJSONError(req.getResponse());
+			ErrorHandler.logJSON(req.getResponse());
 			e.printStackTrace();
 		}
 		List<Song> songs = new ArrayList<>();
@@ -66,7 +66,7 @@ public class Station {
 				ErrorHandler.errorCheck(fres.getCode());
 			}
 		} catch(IOException | PandoraServerException e) {
-			ErrorHandler.logJSONError(req.getResponse());
+			ErrorHandler.logJSON(req.getResponse());
 			e.printStackTrace();
 		}
 	}

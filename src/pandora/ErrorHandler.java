@@ -15,12 +15,12 @@ public class ErrorHandler {
 		throw new PandoraServerException("Status: fail, Code: " + errorCode);
 	}
 	
-	public static void logJSONError(String json) {
+	public static void logJSON(String json) {
 		json = json.replace("{", "\n{\n");
 		json = json.replace("}", "\n}\n");
 		json = json.replace(",", ",\n");
 		try {
-			PrintWriter p = new PrintWriter(new File("err" + System.currentTimeMillis()/1000 + ".json"));
+			PrintWriter p = new PrintWriter(new File(System.currentTimeMillis()/1000 + ".json"));
 			p.write(json, 0, json.length());
 			p.close();
 		} catch(Exception e1) {

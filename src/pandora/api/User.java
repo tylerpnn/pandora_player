@@ -31,7 +31,7 @@ public class User {
 				ErrorHandler.errorCheck(slres.getCode());
 			}
 		} catch(IOException | PandoraServerException e) {
-			ErrorHandler.logJSONError(req.getResponse());
+			ErrorHandler.logJSON(req.getResponse());
 			e.printStackTrace();
 		}
 		Map<String, StationInfo> map = new HashMap<>();

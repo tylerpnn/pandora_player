@@ -68,7 +68,7 @@ public class Application {
 	
 	public void setFeedback(Song song, int feedback) {
 		Station.addFeedback(user, song.getSongInfo(), (feedback > 0));
-		if(feedback < 0)
+		if(feedback < 0 && song.isPlaying())
 			skipSong();
 	}
 	

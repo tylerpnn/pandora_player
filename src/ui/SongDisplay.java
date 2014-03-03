@@ -2,7 +2,6 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -14,12 +13,17 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import pandora.Song;
+import pandora.Song.Display;
 
-public class SongDisplay extends JPanel implements MouseListener {
+public class SongDisplay extends JPanel implements Display, MouseListener {
 	
 	private SongPanel parent;
 	private Song song;
@@ -27,73 +31,73 @@ public class SongDisplay extends JPanel implements MouseListener {
 	private ContextMenu contextMenu;
 	
 	public SongDisplay(SongPanel parent, Song song) {
-		this.setPreferredSize(new Dimension(parent.getWidth(), 104));
-		this.setSize(this.getPreferredSize());
-		this.setMaximumSize(this.getPreferredSize());
 		this.parent = parent;
 		this.song = song;
+		this.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight()/3));
+		this.setSize(this.getPreferredSize());
+		this.setMaximumSize(this.getPreferredSize());
 		this.setBackground(Color.white);
-		if(song.isAd()) song.getSongInfo().setAlbumArtUrl("");
-		try {
-			String url = song.getSongInfo().getAlbumArtUrl();
-			albumArt = ImageIO.read(new URL(url));			
-		} catch (IOException e) {
-			ClassLoader cl = this.getClass().getClassLoader();
-			try {
-				albumArt = ImageIO.read(
-					cl.getResourceAsStream("res/blank.png"));
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+		albumArt = getAlbumArt();
+		
 		this.addMouseListener(this);
-		contextMenu = new ContextMenu(song, this);
+		contextMenu = new ContextMenu(this);
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		JLabel s = new JLabel();
+		if(song.isAd()) {
+			s.setText("Advertisement");
+		} else {
+			s.setText(String.format(
+				"<html><font size=\"4\"><b>%s</b></font><br>"
+				+ "by %s<br>"
+				+ "on %s</html>",
+				song.getSongInfo().getSongName(),
+				song.getSongInfo().getArtistName(),
+				song.getSongInfo().getAlbumName()));
+		}
+		s.setAlignmentY(TOP_ALIGNMENT);
+		this.add(Box.createHorizontalStrut(getHeight() + 10));
+		this.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		this.add(s);
 	}
 	
 	protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(albumArt != null) {
-        	g.drawImage(albumArt, 0, 0, 104, 104, null);
-        	g.drawLine(0, 0, 0, 104);
-        	g.drawLine(104, 0, 104, 104);
-        	g.drawLine(0, 103, 104, 103);
+        	g.drawImage(albumArt, 0, 0, getHeight(), getHeight(), null);
+        	g.drawLine(0, 0, 0, getHeight());
+        	g.drawLine(getHeight(), 0, getHeight(), getHeight());
+        	g.drawLine(0, getHeight()-1, getHeight(), getHeight()-1);
         }
         ((Graphics2D)g).setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setFont(new Font("default", Font.BOLD, 14));       
-        g.drawString((song.isAd()) ? 
-        		"Advertisement" : song.getSongInfo().getSongName(), 114, 20);
-        g.setFont(new Font("default", Font.PLAIN, 12));
-        if(!song.isAd()) {
-	        g.drawString("by " + song.getSongInfo().getArtistName(), 114, 35);
-	        g.drawString("on " + song.getSongInfo().getAlbumName(), 114, 50);
-        }
         if(song.isPlaying()) {
         	g.drawString(String.format("%d:%02d / %d:%02d", 
         			song.getTime() / 60,
         			song.getTime() % 60,
         			song.getDuration() / 60,
-        			song.getDuration() % 60), 114, 90);
+        			song.getDuration() % 60), getHeight() + 10, getHeight() - 20);
         }
         if(song.getSongInfo().getSongRating() != 0) {
         	g.setColor((song.getSongInfo().getSongRating() > 0) 
         			? Color.orange : new Color(187, 187, 242));
-        	Polygon p = new Polygon( new int[] { getWidth()-30, getWidth(), getWidth() },
-        							 new int[] { getHeight(), getHeight()-30, getHeight() },
-        							 3);
+        	int[] xp = new int[] { 0, 0, 20 },
+          		  yp = new int[] { getHeight(), getHeight()-20, getHeight() };
+        	Polygon p = new Polygon( xp, yp, 3);
         	g.fillPolygon(p);
         }
     }
 	
+	@Override
 	public void update() {
 		repaint();
 	}
 	
+	@Override
 	public void setPlaying(boolean b) {
-		parent.scroll(this);
 		if(b) {
 			setBackground(new Color(220,220,220));
+			parent.scroll(this);
 		} else {
 			setBackground(Color.white);
 		}
@@ -111,6 +115,26 @@ public class SongDisplay extends JPanel implements MouseListener {
 	
 	public void explainTrack() {
 		parent.explainTrack(song);
+	}
+	
+	public BufferedImage getAlbumArt() {
+		BufferedImage img = null;
+		ClassLoader cl = this.getClass().getClassLoader();
+		try {
+			if(song.isAd()) {
+				img = ImageIO.read(cl.getResourceAsStream("res/blank.png"));
+			} else {
+				String url = song.getSongInfo().getAlbumArtUrl();
+				img = ImageIO.read(new URL(url));
+			}
+		} catch (IOException e) {
+			try {	//sometimes even when a url is given for the album art, it wont work. Use blank art in this case.
+				img = ImageIO.read(cl.getResourceAsStream("res/blank.png"));
+			} catch (IOException e1) { 
+				return null; 
+			}
+		}
+		return img;
 	}
 
 	@Override

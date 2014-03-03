@@ -29,7 +29,7 @@ public class Track {
 				ErrorHandler.errorCheck(etres.getCode());
 			}
 		} catch(Exception e) {
-			ErrorHandler.logJSONError(req.getResponse());
+			ErrorHandler.logJSON(req.getResponse());
 			e.printStackTrace();
 		}
 		Explanation[] explanations = etres.getResult().getExplanations();

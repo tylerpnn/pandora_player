@@ -11,55 +11,63 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-public class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar implements ActionListener {
 	
-	private JMenuItem login;
-	private JCheckBoxMenuItem muteAds;
+	private Frame frame;
+	
 	private ActionListener logoutListener;
 	private ActionListener loginListener;
 	private JMenu optionsMenu;
+	private JMenuItem login;
+	private JCheckBoxMenuItem muteAds;
+	private JCheckBoxMenuItem compact;
+	private JMenuItem exit;
+	
+	private JMenu songMenu;
+	private JMenuItem like;
+	private JMenuItem dislike;
+	private JMenuItem explain;
+	
+	private boolean isLoggedIn = false;
 	
 	public MenuBar(final Frame parent) {
-		optionsMenu = new JMenu("Options");
-		JMenuItem exit = new JMenuItem("Exit");
-		exit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
-		exit.setMnemonic(KeyEvent.VK_W);
-		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+		this.frame = parent;
 		
-		loginListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new LoginDialog(parent);
-			}
-		};
-		logoutListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				parent.logout();
-			}
-		};
-		
+		optionsMenu = new JMenu("Options");		
+		exit = new JMenuItem("Exit");
+		exit.addActionListener(this);
+		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));		
 		login = new JMenuItem("Log In");
-		login.addActionListener(loginListener);
-		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
-		
+		login.addActionListener(this);
+		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));		
 		muteAds = new JCheckBoxMenuItem("Mute Ads", true);
 		muteAds.setForeground(Color.black);
-		muteAds.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Application.muteAds = muteAds.getState();
-			}
-		});
-		
+		muteAds.addActionListener(this);		
+		compact = new JCheckBoxMenuItem("Compact mode", false);
+		compact.setForeground(Color.black);
+		compact.addActionListener(this);
 		optionsMenu.add(login);
 		optionsMenu.add(muteAds);
+		optionsMenu.add(compact);
 		optionsMenu.add(exit);
+		
+		songMenu = new JMenu("Song");
+		like = new JMenuItem("Like");
+		like.addActionListener(this);
+		dislike = new JMenuItem("Dislike");
+		dislike.addActionListener(this);
+		explain = new JMenuItem("Explain track");
+		explain.addActionListener(this);
+		songMenu.add(like);
+		songMenu.add(dislike);
+		songMenu.add(explain);
+
 		this.add(optionsMenu);
+		this.add(songMenu);
 	}
 	
 	public void loggedIn() {
+		isLoggedIn = true;
 		login.setText("Log Out");
 		login.removeActionListener(loginListener);
 		login.addActionListener(logoutListener);
@@ -67,9 +75,33 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	public void loggedOut() {
+		isLoggedIn = true;
 		login.setText("Log In");
 		login.removeActionListener(logoutListener);
 		login.addActionListener(loginListener);
 		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == login) {
+			if(!isLoggedIn) {
+				new LoginDialog(frame);
+			} else {
+				frame.logout();
+			}
+		}
+		if(e.getSource() == exit) {
+			System.exit(0);
+		}
+		if(e.getSource() == muteAds) {
+			Application.muteAds = muteAds.getState();
+		}
+		if(e.getSource() == compact) {
+			frame.setFrameSize(compact.getState());
+		}
+		if(e.getSource() == like) {
+
+		}
 	}
 }

@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
@@ -128,13 +129,23 @@ public class Frame extends JFrame implements WindowListener {
 				JOptionPane.DEFAULT_OPTION);
 	}
 	
+	public void setFrameSize(boolean b) {
+		if(b) {
+			Insets i = this.getInsets();
+			int height = i.top + i.bottom + bar.getHeight() + menuBar.getHeight();
+			this.setSize(new Dimension(getWidth(), height));
+		} else {
+			this.setSize(new Dimension(500, 400));
+		}
+	}
+	
 	public String[] getStationList() {
 		return app.getStationList();
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		repaint();		
+		repaint();
 	}
 
 	@Override

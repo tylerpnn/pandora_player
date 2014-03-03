@@ -1,7 +1,6 @@
 package pandora;
 
 import json.response.PlaylistResponse.Result.SongInfo;
-import ui.SongDisplay;
 
 public class Song {
 
@@ -9,7 +8,7 @@ public class Song {
 	private boolean playing;
 	private int duration;
 	private int time;
-	private SongDisplay display;
+	private Display display;
 	private boolean isAd;
 	
 	public Song(SongInfo songInfo) {
@@ -61,11 +60,17 @@ public class Song {
 		return this.isAd;
 	}
 	
-	public void setDisplay(SongDisplay display) {
+	public void setDisplay(Display display) {
 		this.display = display;
 	}
 	
-	public SongDisplay getDisplay() {
+	public Display getDisplay() {
 		return this.display;
+	}
+	
+	public interface Display {
+		
+		public void update();
+		public void setPlaying(boolean b);
 	}
 }
