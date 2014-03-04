@@ -58,8 +58,9 @@ public class Player {
 		playerThread = new Thread(new Runnable() {
 			public void run() {
 				currSong = getNextSong();
-				while(!stop && currSong != null && decodeMp4(currSong)) {
+				while(!stop && currSong != null) {
 					currSong = getNextSong();
+					decodeMp4(currSong);
 				}
 			}
 		});
@@ -132,7 +133,7 @@ public class Player {
 		return playlist[index++];
 	}
 	
-	private boolean decodeMp4(Song song) {
+	private void decodeMp4(Song song) {
 		dataLine = null;
 		float oldVol = volume;
 		InputStream in = null;
@@ -173,7 +174,6 @@ public class Player {
 			song.setPlaying(false);
 		} catch(Exception e) {
 			e.printStackTrace();
-			return false;
 		} finally {
 			try {
 				if(in != null)
@@ -186,6 +186,5 @@ public class Player {
 				dataLine.close();
 			}				
 		}
-		return true;
 	}
 }

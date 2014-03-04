@@ -33,15 +33,15 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 	public SongDisplay(SongPanel parent, Song song) {
 		this.parent = parent;
 		this.song = song;
-		this.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight()/3));
+		this.setPreferredSize(new Dimension(parent.getWidth(), 104));
 		this.setSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 		this.setBackground(Color.white);
 		albumArt = getAlbumArt();
-		
-		this.addMouseListener(this);
 		contextMenu = new ContextMenu(this);
+		this.addMouseListener(this);
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
 		JLabel s = new JLabel();
 		if(song.isAd()) {
 			s.setText("Advertisement");
