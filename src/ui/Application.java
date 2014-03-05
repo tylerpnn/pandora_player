@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import pandora.Configuration;
+import pandora.Configuration.UserInfo;
 import pandora.Song;
 import pandora.UserSession;
 import pandora.api.Auth;
@@ -17,9 +19,9 @@ public class Application {
 	
 	private UserSession user;
 	private Player player;
-	private static Frame gui;
+	private Frame gui;
 	
-	public static boolean muteAds = true;
+	private static Configuration config;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -30,11 +32,22 @@ public class Application {
 	}
 	
 	public Application() {
+		config = Configuration.loadConfig();
 		gui = new Frame(this);
 	}
 	
-	public boolean login(String username, char[] password) {
-		this.user = new UserSession(username, String.valueOf(password));
+	public static void exit() {
+		Configuration.writeConfig(config);
+		System.exit(0);
+	}
+	
+	public static Configuration getConfig() {
+		return config;
+	}
+	
+	public boolean login(UserInfo u) {
+		this.user = new UserSession(u.getUsername(), 
+				String.valueOf(u.getPassword()));
 		Auth.partnerLogin(user);
 		Auth.userLogin(user);
 		User.getStationList(user);

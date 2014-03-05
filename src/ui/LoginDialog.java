@@ -1,37 +1,44 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import pandora.Configuration.UserInfo;
+
 public class LoginDialog extends JDialog implements ActionListener {
 
+	private Frame parent;
+	
 	private JTextField username;
 	private JPasswordField password;
 	private JButton login;
 	private JButton cancel;
-	private Frame parent;
+	private JCheckBox pandoraOne;
+	private JCheckBox rememberUser;
 	
 	public LoginDialog(Frame parent) {
 		super(parent, "Login", true);
 		this.parent = parent;
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		this.getContentPane().add(panel);	
-		panel.setLayout(new BorderLayout());
+		this.getContentPane().add(panel);
 		
-		panel.add(labelPanel(), BorderLayout.WEST);
-		panel.add(fieldPanel(), BorderLayout.EAST);
-		panel.add(buttonPanel(), BorderLayout.SOUTH);		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(email());
+		panel.add(password());
+		panel.add(checkBoxes());
+		panel.add(buttons());
 
 		this.pack();
 		this.setLocationRelativeTo(parent);
@@ -39,37 +46,47 @@ public class LoginDialog extends JDialog implements ActionListener {
 		this.setVisible(true);
 	}
 	
-	private JPanel buttonPanel() {
+	private JPanel email() {
 		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		panel.setLayout(new GridLayout(1, 2, 0 ,5));
+		panel.add(new JLabel("Email:"));
+		username = new JTextField(15);
+		panel.add(username);
+		return panel;
+	}
+	
+	private JPanel password() {
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		panel.setLayout(new GridLayout(1, 2, 0, 5));
+		panel.add(new JLabel("Password:"));
+		password = new JPasswordField(15);
+		panel.add(password);
+		password.addActionListener(this);
+		return panel;
+	}
+	
+	private JPanel buttons() {
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		login = new JButton("Login");
-		cancel = new JButton("Cancel");
 		login.addActionListener(this);
+		cancel = new JButton("Close");
 		cancel.addActionListener(this);
 		panel.add(login);
 		panel.add(cancel);
 		return panel;
 	}
 	
-	private JPanel fieldPanel() {
+	private JPanel checkBoxes() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(2, 1, 0, 5));
-		username = new JTextField(15);	
-		password = new JPasswordField(15);
-		password.addActionListener(this);
-		panel.add(username);
-		panel.add(password);
-		return panel;
-	}
-	
-	private JPanel labelPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(2, 1, 0, 5));
-		JLabel emailLabel = new JLabel("Email:");
-		emailLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		JLabel passwordLabel = new JLabel("Password:  ");
-		passwordLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		panel.add(emailLabel, BorderLayout.NORTH);
-		panel.add(passwordLabel, BorderLayout.SOUTH);
+		panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		panel.setLayout(new GridLayout(1, 2, 0, 5));
+		pandoraOne = new JCheckBox("Pandora One", false);
+		rememberUser = new JCheckBox("Remember me", false);
+		panel.add(pandoraOne);
+		panel.add(rememberUser);
 		return panel;
 	}
 	
@@ -77,18 +94,20 @@ public class LoginDialog extends JDialog implements ActionListener {
 		this.dispose();
 	}
 	
-	public void login(String username, char[] password) {
-		parent.login(username, password);
+	public void login(String username, char[] password, boolean pandoraOne) {
+		UserInfo user = new UserInfo(username, password, pandoraOne);
+		if(rememberUser.isSelected()) {
+			Application.getConfig().setRememberUser(true);
+			Application.getConfig().setUser(user);
+		}
+		parent.login(user);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		close();
-		if(e.getSource() == this.login) {
-			login(username.getText(), password.getPassword());
-		}
-		if(e.getSource() == this.password) {
-			login(username.getText(), password.getPassword());
+		if(e.getSource() == this.login || e.getSource() == this.password) {
+			login(username.getText(), password.getPassword(), pandoraOne.isSelected());
 		}
 	}
 }

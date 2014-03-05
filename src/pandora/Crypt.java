@@ -12,20 +12,24 @@ import javax.xml.bind.DatatypeConverter;
 
 public class Crypt {
 
-	private static final String decryptKey = "R=U!LH$O2B#";
-	private static final String encryptKey = "6#26FRL$ZWD";
+	public static final String DECRYPT_KEY = "R=U!LH$O2B#";
+	public static final String ENCRYPT_KEY = "6#26FRL$ZWD";
 	private final static char[] hexArray = "0123456789abcdef".toCharArray();
 	
 	private Cipher encrypt_c;
 	private Cipher decrypt_c;
 	
 	public Crypt() {
+		this(ENCRYPT_KEY, DECRYPT_KEY);
+	}
+	
+	public Crypt(String eKey, String dKey) {
 		try {
 			encrypt_c = Cipher.getInstance("Blowfish/ECB/PKCS5Padding");
-			encrypt_c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "Blowfish"));
+			encrypt_c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(eKey.getBytes(), "Blowfish"));
 			
 			decrypt_c = Cipher.getInstance("Blowfish/ECB/PKCS5Padding");
-			decrypt_c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "Blowfish"));
+			decrypt_c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(dKey.getBytes(), "Blowfish"));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {

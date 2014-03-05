@@ -157,7 +157,7 @@ public class Player {
 			dataLine = AudioSystem.getSourceDataLine(audioFormat);
 			dataLine.open(audioFormat);
 			dataLine.start();
-			setVolume(song.isAd() && Application.muteAds ? 0f : volume);
+			setVolume(song.isAd() && Application.getConfig().getMuteAds() ? 0f : volume);
 			Frame frame;
 			byte[] chunk;
 			SampleBuffer buf = new SampleBuffer();

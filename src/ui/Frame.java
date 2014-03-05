@@ -3,8 +3,6 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -15,6 +13,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
+import pandora.Configuration.UserInfo;
 import pandora.Song;
 import player.Player;
 
@@ -37,23 +36,19 @@ public class Frame extends JFrame implements WindowListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.setPreferredSize(new Dimension(500, 400));
-		this.setSize(this.getPreferredSize());
-		
-		Rectangle bounds = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		int x = bounds.width/2 - this.getSize().width/2;
-		int y = bounds.height/2 - this.getSize().height/2;
-		this.setLocation(new Point(x, y));
 		
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		this.getContentPane().add(panel);
 		initComponents();
-		
+
+		this.setLocationByPlatform(true);
 		this.addWindowListener(this);
 		this.setResizable(false);
-		this.setVisible(true);	
+		this.setVisible(true);
+		this.setFrameSize(Application.getConfig().isCompact());
 	}
 	
 	public void initComponents() {
@@ -100,10 +95,13 @@ public class Frame extends JFrame implements WindowListener {
 		app.playToggle();
 	}
 	
-	public void login(String username, char[] password) {
-		if(app.login(username, password)) {
+	public void login(UserInfo u) {
+		if(app.login(u)) {
 			bar.setStations(app.getStationList());
 			menuBar.loggedIn();
+		} else {
+			Application.getConfig().setRememberUser(false);
+			Application.getConfig().setUser(null);
 		}
 		bar.setSelectedStation("QuickMix");
 		bar.buttonToggle(Player.getStatus());
@@ -130,10 +128,11 @@ public class Frame extends JFrame implements WindowListener {
 	}
 	
 	public void setFrameSize(boolean b) {
+		Application.getConfig().setCompact(b);
 		if(b) {
 			Insets i = this.getInsets();
 			int height = i.top + i.bottom + bar.getHeight() + menuBar.getHeight();
-			this.setSize(new Dimension(getWidth(), height));
+			this.setSize(new Dimension(500, height));
 		} else {
 			this.setSize(new Dimension(500, 400));
 		}
@@ -144,16 +143,19 @@ public class Frame extends JFrame implements WindowListener {
 	}
 
 	@Override
-	public void windowDeiconified(WindowEvent arg0) {
+	public void windowDeiconified(WindowEvent we) {
 		repaint();
 	}
 
 	@Override
+	public void windowClosing(WindowEvent we) {
+		Application.exit();
+	}
+	
+	@Override
 	public void windowActivated(WindowEvent arg0) {}
 	@Override
 	public void windowClosed(WindowEvent arg0) {}
-	@Override
-	public void windowClosing(WindowEvent arg0) {}
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {}
 	@Override

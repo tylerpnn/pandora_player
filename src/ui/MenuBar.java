@@ -40,10 +40,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
 		login = new JMenuItem("Log In");
 		login.addActionListener(this);
 		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));		
-		muteAds = new JCheckBoxMenuItem("Mute Ads", true);
+		muteAds = new JCheckBoxMenuItem("Mute Ads", Application.getConfig().getMuteAds());
 		muteAds.setForeground(Color.black);
 		muteAds.addActionListener(this);		
-		compact = new JCheckBoxMenuItem("Compact mode", false);
+		compact = new JCheckBoxMenuItem("Compact mode", Application.getConfig().isCompact());
 		compact.setForeground(Color.black);
 		compact.addActionListener(this);
 		optionsMenu.add(login);
@@ -62,6 +62,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 		songMenu.add(dislike);
 		songMenu.add(explain);
 
+		
 		this.add(optionsMenu);
 		this.add(songMenu);
 	}
@@ -86,16 +87,20 @@ public class MenuBar extends JMenuBar implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == login) {
 			if(!isLoggedIn) {
-				new LoginDialog(frame);
+				if(Application.getConfig().getRememberUser() && Application.getConfig().getUser() != null) {
+					frame.login(Application.getConfig().getUser());
+				} else {
+					new LoginDialog(frame);
+				}
 			} else {
 				frame.logout();
 			}
 		}
 		if(e.getSource() == exit) {
-			System.exit(0);
+			Application.exit();
 		}
 		if(e.getSource() == muteAds) {
-			Application.muteAds = muteAds.getState();
+			Application.getConfig().setMuteAds(muteAds.getState());
 		}
 		if(e.getSource() == compact) {
 			frame.setFrameSize(compact.getState());

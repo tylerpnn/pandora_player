@@ -32,6 +32,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.parent = parent;
 		this.setFloatable(false);
 		this.setPreferredSize(new Dimension(parent.getWidth(), 31));
+		this.setSize(getPreferredSize());
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		ClassLoader c = this.getClass().getClassLoader();
