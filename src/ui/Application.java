@@ -44,9 +44,9 @@ public class Application {
 	public static Configuration getConfig() {
 		return config;
 	}
-	
+
 	public boolean login(UserInfo u) {
-		this.user = new UserSession(u.getUsername(), 
+		user = new UserSession(u.getUsername(), 
 				String.valueOf(u.getPassword()));
 		Auth.partnerLogin(user);
 		Auth.userLogin(user);
@@ -59,10 +59,11 @@ public class Application {
 		this.user = null;
 		player.stop();
 		player = null;
+		config.setRememberUser(false);
 	}
 	
 	public void playStation(String stationName) {
-		player.playStation(user.getStationInfo(stationName));
+		player.playStation(user.getStationInfoByName(stationName));
 	}
 	
 	public void skipSong() {
@@ -86,14 +87,14 @@ public class Application {
 	}
 	
 	public String getExplanation(Song song) {
-		String res = "This track was selected because it features ";
 		String[] traits = Track.explainTrack(user, song.getSongInfo());
-		for(int i=0; i<traits.length-1; i++) {
-			res += traits[i] + ", ";
-			if(i % 2 == 0)
-				res += "\n";
-		}
-		return res.substring(0, res.length()-3) + ".";
+		String[] format = new String[traits.length];
+		for(int i=0;i < format.length-1; i++) 
+			format[i] = "%s, " + ((i%2==0) ? "\n" : "");
+		format[format.length-1] = "and %s.";
+		StringBuilder fmt = new StringBuilder("This track was selected because it features ");
+		for(String s : format) fmt.append(s);
+		return String.format(fmt.toString(), (Object[])traits);
 	}
 	
 	public String[]	getStationList() {

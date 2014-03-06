@@ -10,6 +10,7 @@ public class Song {
 	private int time;
 	private Display display;
 	private boolean isAd;
+	private boolean isQuickMix;
 	
 	public Song(SongInfo songInfo) {
 		this.songInfo = songInfo;

@@ -9,11 +9,11 @@ import pandora.Song;
 
 public class SongPanel extends JPanel {
 
-	private Frame parent;
+	private Frame frame;
 	private SongDisplay selected;
 	
-	public SongPanel(Frame parent) {
-		this.parent = parent;
+	public SongPanel(Frame frame) {
+		this.frame = frame;
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
@@ -26,7 +26,7 @@ public class SongPanel extends JPanel {
 	
 	public void scroll(SongDisplay sd) {
 		if(sd.getLocation().y + sd.getHeight() >= this.getHeight()) {
-			parent.getScrollBar().setValue(sd.getLocation().y);
+			frame.getScrollBar().setValue(sd.getLocation().y);
 		}
 	}
 	
@@ -47,10 +47,10 @@ public class SongPanel extends JPanel {
 	}
 	
 	public void setFeedback(Song song, int feedback) {
-		parent.setFeedback(song, feedback);
+		frame.setFeedback(song, feedback);
 	}
 	
 	public void explainTrack(Song song) {
-		parent.explainTrack(song);
+		frame.explainTrack(song);
 	}
 }

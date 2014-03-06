@@ -15,8 +15,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
 	
 	private Frame frame;
 	
-	private ActionListener logoutListener;
-	private ActionListener loginListener;
 	private JMenu optionsMenu;
 	private JMenuItem login;
 	private JCheckBoxMenuItem muteAds;
@@ -30,8 +28,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
 	
 	private boolean isLoggedIn = false;
 	
-	public MenuBar(final Frame parent) {
-		this.frame = parent;
+	public MenuBar(final Frame frame) {
+		this.frame = frame;
 		
 		optionsMenu = new JMenu("Options");		
 		exit = new JMenuItem("Exit");
@@ -70,16 +68,12 @@ public class MenuBar extends JMenuBar implements ActionListener {
 	public void loggedIn() {
 		isLoggedIn = true;
 		login.setText("Log Out");
-		login.removeActionListener(loginListener);
-		login.addActionListener(logoutListener);
 		login.setAccelerator(null);
 	}
 	
 	public void loggedOut() {
-		isLoggedIn = true;
+		isLoggedIn = false;
 		login.setText("Log In");
-		login.removeActionListener(logoutListener);
-		login.addActionListener(loginListener);
 		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 	}
 

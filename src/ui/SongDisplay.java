@@ -43,17 +43,21 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		JLabel s = new JLabel();
+		String info="";
 		if(song.isAd()) {
+			info = "Advertisement";
 			s.setText("Advertisement");
 		} else {
-			s.setText(String.format(
-				"<html><font size=\"4\"><b>%s</b></font><br>"
-				+ "by %s<br>"
-				+ "on %s</html>",
-				song.getSongInfo().getSongName(),
-				song.getSongInfo().getArtistName(),
-				song.getSongInfo().getAlbumName()));
+			info = String.format(
+					"<html><font size=\"4\"><b>%s</b></font><br>"
+							+ "by %s<br>"
+							+ "on %s</html>",
+							song.getSongInfo().getSongName(),
+							song.getSongInfo().getArtistName(),
+							song.getSongInfo().getAlbumName());
+			
 		}
+		s.setText(info);
 		s.setAlignmentY(TOP_ALIGNMENT);
 		this.add(Box.createHorizontalStrut(getHeight() + 10));
 		this.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));

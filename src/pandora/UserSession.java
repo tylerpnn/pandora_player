@@ -104,19 +104,15 @@ public class UserSession {
 		return this.currentPlaylist;
 	}
 	
-	public StationInfo getStationInfo(String stationName) {
+	public StationInfo getStationInfoByName(String stationName) {
 		return stations.get(stationName);
 	}
 	
-	public String toString() {
-		String user = "";
-		user += "username: " + username;
-		user += ", password: " + password;
-		user += ", partnerAuthToken: " + partnerAuthToken;
-		user += ", partnerId: " + partnerId;
-		user += ", userAuthToken: " + userAuthToken;
-		user += ", userId: " + userId;
-		return user;
-	}
-	
+	public StationInfo getStationInfoById(String stationId) {
+		for(StationInfo si : stations.values()) {
+			if(si.getStationId().equals(stationId))
+				return si;
+		}
+		return null;
+	}	
 }

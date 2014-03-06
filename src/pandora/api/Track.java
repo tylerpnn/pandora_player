@@ -33,8 +33,8 @@ public class Track {
 			e.printStackTrace();
 		}
 		Explanation[] explanations = etres.getResult().getExplanations();
-		String[] s = new String[explanations.length];
-		for(int i=0; i<explanations.length; i++) {
+		String[] s = new String[explanations.length-1];
+		for(int i=0; i<s.length; i++) {
 			s[i] = explanations[i].getFocusTraitName();
 		}
 		return s;

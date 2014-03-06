@@ -23,15 +23,15 @@ public class ToolBar extends JToolBar implements ActionListener {
 	private JComboBox<String> stationCombo;
 	private JButton play;
 	private JButton next;
-	private Frame parent;
+	private Frame frame;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
 	
-	public ToolBar(Frame parent) {
+	public ToolBar(Frame frame) {
 		super(HORIZONTAL);
-		this.parent = parent;
+		this.frame = frame;
 		this.setFloatable(false);
-		this.setPreferredSize(new Dimension(parent.getWidth(), 31));
+		this.setPreferredSize(new Dimension(frame.getWidth(), 31));
 		this.setSize(getPreferredSize());
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
@@ -99,14 +99,14 @@ public class ToolBar extends JToolBar implements ActionListener {
 		if(e.getSource() == stationCombo) {
 			String stationName = (String) stationCombo.getSelectedItem();
 			if(stationName != null) {
-				parent.chooseStation(stationName);
+				frame.chooseStation(stationName);
 			}
 		}
 		if(e.getSource() == next) {
-			parent.skipSong();
+			frame.skipSong();
 		}
 		if(e.getSource() == play) {
-			parent.playToggle();
+			frame.playToggle();
 			buttonToggle(Player.getStatus());
 		}
 	}

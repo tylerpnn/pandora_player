@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import pandora.Configuration.UserInfo;
@@ -85,6 +86,7 @@ public class Frame extends JFrame implements WindowListener {
 			songPanel.removeAll();
 		}
 		app.playStation(stationName);
+		bar.buttonToggle(Player.getStatus());
 	}
 	
 	public void skipSong() {
@@ -95,16 +97,21 @@ public class Frame extends JFrame implements WindowListener {
 		app.playToggle();
 	}
 	
-	public void login(UserInfo u) {
-		if(app.login(u)) {
-			bar.setStations(app.getStationList());
-			menuBar.loggedIn();
-		} else {
-			Application.getConfig().setRememberUser(false);
-			Application.getConfig().setUser(null);
-		}
-		bar.setSelectedStation("QuickMix");
-		bar.buttonToggle(Player.getStatus());
+	public void login(final UserInfo u) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				if(app.login(u)) {
+					bar.setStations(app.getStationList());
+					menuBar.loggedIn();
+					chooseStation("QuickMix");
+				} else {
+					Application.getConfig().setRememberUser(false);
+					Application.getConfig().setUser(null);
+				}
+				return null;
+			}			
+		}.execute();
 	}
 	
 	public void logout() {

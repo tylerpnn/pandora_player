@@ -18,7 +18,7 @@ import pandora.Configuration.UserInfo;
 
 public class LoginDialog extends JDialog implements ActionListener {
 
-	private Frame parent;
+	private Frame frame;
 	
 	private JTextField username;
 	private JPasswordField password;
@@ -27,13 +27,13 @@ public class LoginDialog extends JDialog implements ActionListener {
 	private JCheckBox pandoraOne;
 	private JCheckBox rememberUser;
 	
-	public LoginDialog(Frame parent) {
-		super(parent, "Login", true);
-		this.parent = parent;
+	public LoginDialog(Frame frame) {
+		super(frame, "Login", true);
+		this.frame = frame;
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.getContentPane().add(panel);
-		
+
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(email());
 		panel.add(password());
@@ -41,7 +41,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 		panel.add(buttons());
 
 		this.pack();
-		this.setLocationRelativeTo(parent);
+		this.setLocationRelativeTo(frame);
 		this.setResizable(false);
 		this.setVisible(true);
 	}
@@ -100,7 +100,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 			Application.getConfig().setRememberUser(true);
 			Application.getConfig().setUser(user);
 		}
-		parent.login(user);
+		frame.login(user);
 	}
 
 	@Override
