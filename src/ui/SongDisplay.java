@@ -33,7 +33,7 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 	public SongDisplay(SongPanel parent, Song song) {
 		this.parent = parent;
 		this.song = song;
-		this.setPreferredSize(new Dimension(parent.getWidth(), 104));
+		this.setPreferredSize(new Dimension(parent.getWidth(), 115));
 		this.setSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 		this.setBackground(Color.white);
@@ -41,7 +41,6 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 		contextMenu = new ContextMenu(this);
 		this.addMouseListener(this);
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		
 		JLabel s = new JLabel();
 		String info="";
 		if(song.isAd()) {
@@ -55,8 +54,7 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 					song.getSongInfo().getArtistName(),
 					song.getSongInfo().getAlbumName());
 			if(song.getStationName().equals("QuickMix")) {
-				info += String.format("<br>@%s", 
-						parent.getStationName(song.getSongInfo().getStationId()));
+				info += "<br>@" + parent.getStationName(song.getSongInfo().getStationId());
 			}
 			info += "</html>";
 		}
@@ -64,6 +62,7 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 		s.setAlignmentY(TOP_ALIGNMENT);
 		this.add(Box.createHorizontalStrut(getHeight() + 10));
 		this.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		this.setAlignmentX(LEFT_ALIGNMENT);
 		this.add(s);
 	}
 	
@@ -79,11 +78,12 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         if(song.isPlaying()) {
-        	g.drawString(String.format("%d:%02d / %d:%02d", 
+        	String t = String.format("%d:%02d / %d:%02d", 
         			(int)song.getTime() / 60,
         			(int)song.getTime() % 60,
         			(int)song.getDuration() / 60,
-        			(int)song.getDuration() % 60), getWidth() - getHeight() + 20, getHeight() - 23);
+        			(int)song.getDuration() % 60);
+        	g.drawString(t, getWidth() - g.getFontMetrics().stringWidth(t) - 15, getHeight() - 23);
         	drawProgress(g);
         }
         if(song.getSongInfo().getSongRating() != 0) {

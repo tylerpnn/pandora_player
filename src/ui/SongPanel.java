@@ -16,7 +16,6 @@ public class SongPanel extends JPanel {
 	public SongPanel(Frame frame) {
 		this.frame = frame;
 		this.setBackground(Color.white);
-		this.setSize(new Dimension(frame.getWidth(), getHeight()));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 	
@@ -27,6 +26,11 @@ public class SongPanel extends JPanel {
 	}
 	
 	public void scroll(SongDisplay sd) {
+		if(frame.getScrollBar().isVisible()) {
+			sd.setPreferredSize(new Dimension(sd.getWidth() - frame.getScrollBar().getWidth(), sd.getHeight()));
+			sd.setSize(sd.getPreferredSize());
+			sd.setMaximumSize(sd.getPreferredSize());
+		}
 		if(sd.getLocation().y + sd.getHeight() >= this.getHeight()) {
 			frame.getScrollBar().setValue(sd.getLocation().y);
 		}

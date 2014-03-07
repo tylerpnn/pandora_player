@@ -59,7 +59,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
 		
 		this.add(optionsMenu);
-		this.add(songMenu);
+//		this.add(songMenu);
 	}
 	
 	public void loggedIn() {
