@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -39,10 +38,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
 		login.addActionListener(this);
 		login.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));		
 		muteAds = new JCheckBoxMenuItem("Mute Ads", Application.getConfig().getMuteAds());
-		muteAds.setForeground(Color.black);
 		muteAds.addActionListener(this);		
 		compact = new JCheckBoxMenuItem("Compact mode", Application.getConfig().isCompact());
-		compact.setForeground(Color.black);
 		compact.addActionListener(this);
 		optionsMenu.add(login);
 		optionsMenu.add(muteAds);

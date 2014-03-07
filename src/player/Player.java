@@ -139,12 +139,12 @@ public class Player {
 		InputStream in = null;
 		try {
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
-			System.out.println(audioURL);
+			System.out.println(audioURL.substring(0, audioURL.indexOf(".mp4")+4));
 			URL url = new URL(audioURL);
 			in = url.openStream();
 			MP4Container cont = new MP4Container(in);
 			Movie movie = cont.getMovie();
-			song.setDuration((int) movie.getDuration());
+			song.setDuration(movie.getDuration());
 			app.displaySong(song);
 			song.setPlaying(true);
 			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
@@ -164,7 +164,7 @@ public class Player {
 			while(!stop && !skip && track.hasMoreFrames()) {
 				while(!skip && paused) { Thread.sleep(100l); }
 				frame = track.readNextFrame();
-				song.update((int)frame.getTime());
+				song.update(frame.getTime());
 				dec.decodeFrame(frame.getData(), buf);
 				chunk = buf.getData();
 				dataLine.write(chunk, 0, chunk.length);

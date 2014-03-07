@@ -46,16 +46,19 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
 		String info="";
 		if(song.isAd()) {
 			info = "Advertisement";
-			s.setText("Advertisement");
 		} else {
 			info = String.format(
 					"<html><font size=\"4\"><b>%s</b></font><br>"
-							+ "by %s<br>"
-							+ "on %s</html>",
-							song.getSongInfo().getSongName(),
-							song.getSongInfo().getArtistName(),
-							song.getSongInfo().getAlbumName());
-			
+					+ "by %s<br>"
+					+ "on %s",
+					song.getSongInfo().getSongName(),
+					song.getSongInfo().getArtistName(),
+					song.getSongInfo().getAlbumName());
+			if(song.getStationName().equals("QuickMix")) {
+				info += String.format("<br>@%s", 
+						parent.getStationName(song.getSongInfo().getStationId()));
+			}
+			info += "</html>";
 		}
 		s.setText(info);
 		s.setAlignmentY(TOP_ALIGNMENT);
@@ -77,10 +80,11 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         if(song.isPlaying()) {
         	g.drawString(String.format("%d:%02d / %d:%02d", 
-        			song.getTime() / 60,
-        			song.getTime() % 60,
-        			song.getDuration() / 60,
-        			song.getDuration() % 60), getHeight() + 10, getHeight() - 20);
+        			(int)song.getTime() / 60,
+        			(int)song.getTime() % 60,
+        			(int)song.getDuration() / 60,
+        			(int)song.getDuration() % 60), getWidth() - getHeight() + 20, getHeight() - 23);
+        	drawProgress(g);
         }
         if(song.getSongInfo().getSongRating() != 0) {
         	g.setColor((song.getSongInfo().getSongRating() > 0) 
@@ -91,6 +95,15 @@ public class SongDisplay extends JPanel implements Display, MouseListener {
         	g.fillPolygon(p);
         }
     }
+	
+	private void drawProgress(Graphics g) {
+		int w = getWidth() - getHeight() - 20;
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(getHeight() + 10, getHeight() - 15, w, 5);
+		double progress = w * (song.getTime() / song.getDuration());
+		g.setColor(Color.black);
+		g.fillRect(getHeight() + 10, getHeight() - 15, (int)progress, 5);
+	}
 	
 	@Override
 	public void update() {

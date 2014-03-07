@@ -97,6 +97,10 @@ public class Application {
 		return String.format(fmt.toString(), (Object[])traits);
 	}
 	
+	public String getStationName(String stationId) {
+		return user.getStationInfoById(stationId).getStationName();
+	}
+	
 	public String[]	getStationList() {
 		Set<String> stations = null;
 		if(user != null && user.getStations() != null) {

@@ -43,7 +43,9 @@ public class Station {
 		List<Song> songs = new ArrayList<>();
 		for(SongInfo songInfo : plres.getSongs()) {
 			if(songInfo.getSongIdentity() == null) continue;
-			songs.add(new Song(songInfo));
+			Song s = new Song(songInfo);
+			s.setStationName(new String(station.getStationName()));
+			songs.add(s);
 		}
 		return songs.toArray(new Song[songs.size()]);
 	}

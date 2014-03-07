@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ public class SongPanel extends JPanel {
 	public SongPanel(Frame frame) {
 		this.frame = frame;
 		this.setBackground(Color.white);
+		this.setSize(new Dimension(frame.getWidth(), getHeight()));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 	
@@ -44,6 +46,10 @@ public class SongPanel extends JPanel {
 		} else {
 			selected = null;
 		}
+	}
+	
+	public String getStationName(String stationId) {
+		return frame.getStationName(stationId);
 	}
 	
 	public void setFeedback(Song song, int feedback) {

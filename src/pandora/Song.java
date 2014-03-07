@@ -6,11 +6,11 @@ public class Song {
 
 	private SongInfo songInfo;
 	private boolean playing;
-	private int duration;
-	private int time;
+	private double duration;
+	private double time;
 	private Display display;
 	private boolean isAd;
-	private boolean isQuickMix;
+	private String stationName;
 	
 	public Song(SongInfo songInfo) {
 		this.songInfo = songInfo;
@@ -20,24 +20,24 @@ public class Song {
 		return this.songInfo;
 	}
 	
-	public int getTime() {
+	public double getTime() {
 		return this.time;
 	}
 	
-	public void setTime(int t) {
+	public void setTime(double t) {
 		this.time = t;
 	}
 	
-	public int getDuration() {
+	public double getDuration() {
 		return this.duration;
 	}
 	
-	public void setDuration(int t) {
+	public void setDuration(double t) {
 		this.duration = t;
-		this.setIsAd(t <= 30);
+		this.setIsAd(t <= 30f);
 	}
 	
-	public void update(int time) {
+	public void update(double time) {
 		this.time = time;
 		if(display != null)
 			display.update();
@@ -68,7 +68,15 @@ public class Song {
 	public Display getDisplay() {
 		return this.display;
 	}
-	
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
 	public interface Display {
 		
 		public void update();

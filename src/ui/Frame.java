@@ -30,11 +30,16 @@ public class Frame extends JFrame implements WindowListener {
 	public Frame(Application app) {
 		super("Pandora Player");
 		this.app = app;
-		
+
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			UIManager.put("Slider.paintValue", false);
-		} catch (Exception e) {
+			String osname = System.getProperty("os.name");
+			if(osname.equals("Linux")) {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+			} else {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -104,7 +109,7 @@ public class Frame extends JFrame implements WindowListener {
 				if(app.login(u)) {
 					bar.setStations(app.getStationList());
 					menuBar.loggedIn();
-					chooseStation("QuickMix");
+					bar.setSelectedStation("QuickMix");
 				} else {
 					Application.getConfig().setRememberUser(false);
 					Application.getConfig().setUser(null);
@@ -147,6 +152,10 @@ public class Frame extends JFrame implements WindowListener {
 	
 	public String[] getStationList() {
 		return app.getStationList();
+	}
+	
+	public String getStationName(String stationId) {
+		return app.getStationName(stationId);
 	}
 
 	@Override
