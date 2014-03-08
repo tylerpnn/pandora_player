@@ -10,6 +10,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import pandora.Application;
+
 public class MenuBar extends JMenuBar implements ActionListener {
 	
 	private Frame frame;

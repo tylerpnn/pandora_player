@@ -1,10 +1,16 @@
-package pandora;
+package ui;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import pandora.Crypt;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +21,7 @@ public final class Configuration {
 
 	private boolean muteAds, rememberUser, compact;
 	private UserInfo user;
+	private Location loc;
 
 	private Configuration() {
 		muteAds = true;
@@ -51,6 +58,14 @@ public final class Configuration {
 
 	public void setCompact(boolean compact) {
 		this.compact = compact;
+	}
+
+	public Location getLoc() {
+		return loc;
+	}
+
+	public void setLoc(Location loc) {
+		this.loc = loc;
 	}
 	
 	public String toString() {
@@ -97,6 +112,27 @@ public final class Configuration {
 		return config;
 	}
 
+	public static class Location {
+		public final int x;
+		public final int y;
+		
+		@JsonCreator
+		public Location(@JsonProperty("x") int x, @JsonProperty("y") int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		public Location(Point p) {
+			this.x = p.x;
+			this.y = p.y;
+		}
+		
+		@JsonIgnore
+		public Point getPoint() {
+			return new Point(x, y);
+		}
+	}
+
 	public static class UserInfo {
 		private String username;
 		private char[] password;
@@ -109,7 +145,7 @@ public final class Configuration {
 		public UserInfo(String u, char[] p, boolean po) {
 			username = u;
 			password = p;
-			setPandoraOne(po);
+			pandoraOne = po;
 		}
 
 		public String getUsername() {

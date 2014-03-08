@@ -17,10 +17,10 @@ import net.sourceforge.jaad.mp4.api.AudioTrack;
 import net.sourceforge.jaad.mp4.api.Frame;
 import net.sourceforge.jaad.mp4.api.Movie;
 import net.sourceforge.jaad.mp4.api.Track;
+import pandora.Application;
 import pandora.Song;
 import pandora.UserSession;
 import pandora.api.Station;
-import ui.Application;
 
 
 public class Player {

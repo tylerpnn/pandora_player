@@ -14,11 +14,14 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
-import pandora.Configuration.UserInfo;
+import pandora.Application;
 import pandora.Song;
+import pandora.UserInterface;
 import player.Player;
+import ui.Configuration.Location;
+import ui.Configuration.UserInfo;
 
-public class Frame extends JFrame implements WindowListener {
+public class Frame extends JFrame implements UserInterface, WindowListener {
 
 	private JPanel panel;
 	private Application app;
@@ -50,7 +53,9 @@ public class Frame extends JFrame implements WindowListener {
 		this.getContentPane().add(panel);
 		initComponents();
 
-		this.setLocationByPlatform(true);
+		Location loc = Application.getConfig().getLoc();
+		if(loc != null)
+			this.setLocation(loc.getPoint());
 		this.addWindowListener(this);
 		this.setResizable(false);
 		this.setVisible(true);
@@ -165,6 +170,7 @@ public class Frame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent we) {
+		Application.getConfig().setLoc(new Location(this.getLocation()));
 		Application.exit();
 	}
 	

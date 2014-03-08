@@ -14,7 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import pandora.Configuration.UserInfo;
+import pandora.Application;
+import ui.Configuration.UserInfo;
 
 public class LoginDialog extends JDialog implements ActionListener {
 

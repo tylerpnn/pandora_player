@@ -1,39 +1,43 @@
-package ui;
+package pandora;
 
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
-import pandora.Configuration;
-import pandora.Configuration.UserInfo;
-import pandora.Song;
-import pandora.UserSession;
+import cli.CLI;
 import pandora.api.Auth;
 import pandora.api.Station;
 import pandora.api.Track;
 import pandora.api.User;
 import player.Player;
+import ui.Configuration;
+import ui.Frame;
+import ui.Configuration.UserInfo;
 
 
 public class Application {
 	
 	private UserSession user;
+	private UserInterface ui;
 	private Player player;
-	private Frame gui;
 	
 	private static Configuration config;
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Application();
+				new Application(args);
 			}
 		});
 	}
 	
-	public Application() {
+	public Application(final String[] args) {
 		config = Configuration.loadConfig();
-		gui = new Frame(this);
+		if(args.length > 0 && args[0].equals("-nogui")) {
+			ui = new CLI(this);
+		} else {
+			ui = new Frame(this);
+		}
 	}
 	
 	public static void exit() {
@@ -77,7 +81,7 @@ public class Application {
 	}
 	
 	public void displaySong(Song song) {
-		gui.displaySong(song);
+		ui.displaySong(song);
 	}
 	
 	public void setFeedback(Song song, int feedback) {
@@ -89,7 +93,7 @@ public class Application {
 	public String getExplanation(Song song) {
 		String[] traits = Track.explainTrack(user, song.getSongInfo());
 		String[] format = new String[traits.length];
-		for(int i=0;i < format.length-1; i++) 
+		for(int i=0; i < format.length-1; i++) 
 			format[i] = "%s, " + ((i%2==0) ? "\n" : "");
 		format[format.length-1] = "and %s.";
 		StringBuilder fmt = new StringBuilder("This track was selected because it features ");
