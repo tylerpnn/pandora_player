@@ -1,4 +1,4 @@
-package ui;
+package ui.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,10 +16,10 @@ import javax.swing.UIManager;
 
 import pandora.Application;
 import pandora.Song;
+import pandora.UserInfo;
 import pandora.UserInterface;
 import player.Player;
-import ui.Configuration.Location;
-import ui.Configuration.UserInfo;
+import ui.gui.Configuration.Location;
 
 public class Frame extends JFrame implements UserInterface, WindowListener {
 
@@ -107,11 +107,11 @@ public class Frame extends JFrame implements UserInterface, WindowListener {
 		app.playToggle();
 	}
 	
-	public void login(final UserInfo u) {
+	public void login(final UserInfo uInfo) {
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if(app.login(u)) {
+				if(app.login(uInfo)) {
 					bar.setStations(app.getStationList());
 					menuBar.loggedIn();
 					bar.setSelectedStation("QuickMix");

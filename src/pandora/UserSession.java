@@ -7,8 +7,6 @@ import json.response.StationListResponse.Result.StationInfo;
 
 public class UserSession {
 
-	private String username;
-	private String password;
 	private String userAuthToken;
 	private String partnerAuthToken;
 	private String partnerId;
@@ -18,9 +16,7 @@ public class UserSession {
 	private Map<String, StationInfo> stations;
 	private SongInfo[] currentPlaylist;
 	
-	public UserSession(String username, String password) {
-		this.username = username;
-		this.password = password;
+	public UserSession() {
 		startTime = System.currentTimeMillis() / 1000;
 	}
 	
@@ -78,14 +74,6 @@ public class UserSession {
 	
 	public String getUserId() {
 		return this.userId;
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
-	public String getPassword() {
-		return this.password;
 	}
 	
 	public void setStations(Map<String, StationInfo> stations) {

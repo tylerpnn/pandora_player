@@ -11,6 +11,7 @@ import pandora.ErrorHandler;
 import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
 import pandora.RequestHandler;
+import pandora.UserInfo;
 import pandora.UserSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,12 +44,12 @@ public class Auth {
 		user.setSyncTime(Long.parseLong(c.decryptSyncTime(plres.getSyncTime())));
 	}
 	
-	public static void userLogin(UserSession user) {
+	public static void userLogin(UserSession user, UserInfo uInfo) {
 		UserLoginRequest ulreq = new UserLoginRequest();
 		ulreq.setLoginType("user");
 		ulreq.setPartnerAuthToken(user.getPartnerAuthToken());
-		ulreq.setUsername(user.getUsername());
-		ulreq.setPassword(user.getPassword());
+		ulreq.setUsername(uInfo.getUsername());
+		ulreq.setPassword(String.valueOf(uInfo.getPassword()));
 		ulreq.setSyncTime(user.calcSyncTime());
 		Request req = new Request("auth.userLogin", user, ulreq, true);
 		RequestHandler.sendRequest(req);

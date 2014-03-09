@@ -1,4 +1,4 @@
-package ui;
+package ui.gui;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import pandora.Application;
-import ui.Configuration.UserInfo;
+import pandora.UserInfo;
 
 public class LoginDialog extends JDialog implements ActionListener {
 

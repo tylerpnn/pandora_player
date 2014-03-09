@@ -4,15 +4,14 @@ import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
-import cli.CLI;
 import pandora.api.Auth;
 import pandora.api.Station;
 import pandora.api.Track;
 import pandora.api.User;
 import player.Player;
-import ui.Configuration;
-import ui.Frame;
-import ui.Configuration.UserInfo;
+import ui.cli.CLI;
+import ui.gui.Configuration;
+import ui.gui.Frame;
 
 
 public class Application {
@@ -49,11 +48,10 @@ public class Application {
 		return config;
 	}
 
-	public boolean login(UserInfo u) {
-		user = new UserSession(u.getUsername(), 
-				String.valueOf(u.getPassword()));
+	public boolean login(UserInfo uInfo) {
+		user = new UserSession();
 		Auth.partnerLogin(user);
-		Auth.userLogin(user);
+		Auth.userLogin(user, uInfo);
 		User.getStationList(user);
 		player = new Player(this, user);
 		return true;

@@ -1,4 +1,4 @@
-package cli;
+package ui.cli;
 
 import pandora.Application;
 import pandora.Song;
