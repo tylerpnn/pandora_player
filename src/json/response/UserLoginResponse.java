@@ -1,11 +1,7 @@
 package json.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLoginResponse extends JSONResponse {
 	
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Result {
 		private String userId, userAuthToken;
 

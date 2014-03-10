@@ -30,7 +30,7 @@ public class Application {
 		});
 	}
 	
-	public Application(final String[] args) {
+	public Application(String[] args) {
 		config = Configuration.loadConfig();
 		if(args.length > 0 && args[0].equals("-nogui")) {
 			ui = new CLI(this);

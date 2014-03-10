@@ -1,20 +1,15 @@
 package pandora.api;
 
-import java.io.IOException;
-
 import json.request.PartnerLoginRequest;
 import json.request.UserLoginRequest;
+import json.response.JSONResponse;
 import json.response.PartnerLoginResponse;
 import json.response.UserLoginResponse;
 import pandora.Crypt;
-import pandora.ErrorHandler;
-import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
 import pandora.RequestHandler;
 import pandora.UserInfo;
 import pandora.UserSession;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Auth {
 
@@ -27,17 +22,8 @@ public class Auth {
 		Request req = new Request("auth.partnerLogin", user, plreq, false);
 		RequestHandler.sendRequest(req);
 		
-		PartnerLoginResponse plres = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			plres = mapper.readValue(req.getResponse(), PartnerLoginResponse.class);
-			if(!plres.getStat().equalsIgnoreCase("ok")) {
-				ErrorHandler.errorCheck(plres.getCode());
-			}
-		} catch (IOException | PandoraServerException e) {
-			ErrorHandler.logJSON(req.getResponse());
-			e.printStackTrace();
-		}
+		PartnerLoginResponse plres = JSONResponse.loadFromJson(
+				req.getResponse(), PartnerLoginResponse.class);
 		Crypt c = new Crypt();
 		user.setPartnerAuthToken(plres.getPartnerAuthToken());
 		user.setPartnerId(plres.getPartnerId());
@@ -54,17 +40,8 @@ public class Auth {
 		Request req = new Request("auth.userLogin", user, ulreq, true);
 		RequestHandler.sendRequest(req);
 		
-		UserLoginResponse ulres = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			ulres = mapper.readValue(req.getResponse(), UserLoginResponse.class);
-			if(!ulres.getStat().equalsIgnoreCase("ok")) {
-				ErrorHandler.errorCheck(ulres.getCode());
-			}
-		} catch(IOException | PandoraServerException e) {
-			ErrorHandler.logJSON(req.getResponse());
-			e.printStackTrace();
-		}
+		UserLoginResponse ulres = JSONResponse.loadFromJson(
+				req.getResponse(), UserLoginResponse.class);
 		user.setUserAuthToken(ulres.getUserAuthToken());
 		user.setUserId(ulres.getUserId());
 	}

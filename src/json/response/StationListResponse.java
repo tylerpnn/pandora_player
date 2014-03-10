@@ -1,16 +1,11 @@
 package json.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import json.response.StationListResponse.Result.StationInfo;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class StationListResponse extends JSONResponse {
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Result {
 		
-		@JsonIgnoreProperties(ignoreUnknown = true)
 		public static class StationInfo {
 			private String stationName, stationId, stationToken, stationDetailUrl;
 			private boolean isQuickMix;

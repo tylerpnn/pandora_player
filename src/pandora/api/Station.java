@@ -1,23 +1,19 @@
 package pandora.api;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import json.request.FeedbackRequest;
 import json.request.PlaylistRequest;
 import json.response.FeedbackResponse;
+import json.response.JSONResponse;
 import json.response.PlaylistResponse;
 import json.response.PlaylistResponse.Result.SongInfo;
 import json.response.StationListResponse.Result.StationInfo;
-import pandora.ErrorHandler;
-import pandora.ErrorHandler.PandoraServerException;
 import pandora.Request;
 import pandora.RequestHandler;
 import pandora.Song;
 import pandora.UserSession;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Station {
 
@@ -29,17 +25,8 @@ public class Station {
 		Request req = new Request("station.getPlaylist", user, plreq, true);
 		RequestHandler.sendRequest(req);
 		
-		PlaylistResponse plres = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			plres = mapper.readValue(req.getResponse(), PlaylistResponse.class);
-			if(!plres.getStat().equalsIgnoreCase("ok")) {
-				ErrorHandler.errorCheck(plres.getCode());
-			}
-		} catch (IOException | PandoraServerException e) {
-			ErrorHandler.logJSON(req.getResponse());
-			e.printStackTrace();
-		}
+		PlaylistResponse plres = JSONResponse.loadFromJson(
+				req.getResponse(), PlaylistResponse.class);
 		List<Song> songs = new ArrayList<>();
 		for(SongInfo songInfo : plres.getSongs()) {
 			if(songInfo.getSongIdentity() == null) continue;
@@ -60,16 +47,7 @@ public class Station {
 		Request req = new Request("station.addFeedback", user, freq, true);
 		RequestHandler.sendRequest(req);
 		
-		FeedbackResponse fres = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			fres = mapper.readValue(req.getResponse(), FeedbackResponse.class);
-			if(!fres.getStat().equalsIgnoreCase("ok")) {
-				ErrorHandler.errorCheck(fres.getCode());
-			}
-		} catch(IOException | PandoraServerException e) {
-			ErrorHandler.logJSON(req.getResponse());
-			e.printStackTrace();
-		}
+		FeedbackResponse fres = JSONResponse.loadFromJson(
+				req.getResponse(), FeedbackResponse.class);
 	}
 }

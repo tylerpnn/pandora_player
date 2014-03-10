@@ -60,6 +60,7 @@ public class Player {
 				currSong = getNextSong();
 				while(!stop && currSong != null) {
 					currSong = getNextSong();
+					app.displaySong(currSong);
 					decodeMp4(currSong);
 				}
 			}
@@ -145,7 +146,6 @@ public class Player {
 			MP4Container cont = new MP4Container(in);
 			Movie movie = cont.getMovie();
 			song.setDuration(movie.getDuration());
-			app.displaySong(song);
 			song.setPlaying(true);
 			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
 			AudioTrack track = (AudioTrack) tracks.get(0);

@@ -5,18 +5,12 @@ import java.util.Map;
 
 import json.response.PlaylistResponse.Result.SongInfo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaylistResponse extends JSONResponse {
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Result {
 		
-		@JsonIgnoreProperties(ignoreUnknown = true)
 		public static class SongInfo {
 			
-			@JsonIgnoreProperties(ignoreUnknown = true)
 			public static class AudioUrlMap {
 				
 				public static class AudioUrl {

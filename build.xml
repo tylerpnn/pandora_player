@@ -8,16 +8,32 @@
     <path id="classpath">
     	<fileset dir="${lib}" includes="*.jar" />
     </path>
+	
+	<target name="clean">
+		<delete dir="${dist}" />
+		<delete dir="${bin}" />
+	</target>
 
-    <target name="init">
-    	<mkdir dir="${bin}" />
-    	<mkdir dir="${dist}" />
-    </target>
+	<target name="init" depends="clean">
+		<mkdir dir="${bin}" />
+		<mkdir dir="${dist}" />
+	</target>
 
     <target name="compile" depends="init">
     	<javac srcdir="${src}" destdir="${bin}" classpathref="classpath" />
     </target>
 
-    <target name="all" depends="compile" />
+	<target name="jar" depends="compile">
+		<jar basedir="${bin}" jarfile="${dist}/pandora.jar" >
+			<include name="**/*.class" />
+			<zipgroupfileset dir="${lib}" includes="*.jar" />
+			<fileset dir="${src}" includes="res/**" />
+			<manifest>
+				<attribute name="Main-Class" value="pandora.Application" />
+			</manifest>
+		</jar>		
+	</target>
+
+    <target name="all" depends="jar" />
 
 </project>

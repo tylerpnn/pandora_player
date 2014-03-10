@@ -3,13 +3,11 @@ package pandora.api;
 import json.request.ExplainTrackRequest;
 import json.response.ExplainTrackResponse;
 import json.response.ExplainTrackResponse.Result.Explanation;
+import json.response.JSONResponse;
 import json.response.PlaylistResponse.Result.SongInfo;
-import pandora.ErrorHandler;
 import pandora.Request;
 import pandora.RequestHandler;
 import pandora.UserSession;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Track {
 
@@ -21,17 +19,8 @@ public class Track {
 		Request req = new Request("track.explainTrack", user, etreq, true);
 		RequestHandler.sendRequest(req);
 		
-		ExplainTrackResponse etres = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			etres = mapper.readValue(req.getResponse(), ExplainTrackResponse.class);
-			if(!etres.getStat().equals("ok")) {
-				ErrorHandler.errorCheck(etres.getCode());
-			}
-		} catch(Exception e) {
-			ErrorHandler.logJSON(req.getResponse());
-			e.printStackTrace();
-		}
+		ExplainTrackResponse etres = JSONResponse.loadFromJson(
+				req.getResponse(), ExplainTrackResponse.class);
 		Explanation[] explanations = etres.getResult().getExplanations();
 		String[] s = new String[explanations.length-1];
 		for(int i=0; i<s.length; i++) {

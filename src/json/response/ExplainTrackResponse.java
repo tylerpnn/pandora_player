@@ -1,14 +1,9 @@
 package json.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExplainTrackResponse extends JSONResponse {
 	
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Result {
 		
-		@JsonIgnoreProperties(ignoreUnknown = true)
 		public static class Explanation {
 			
 			private String focusTraitName, focusTraitId;

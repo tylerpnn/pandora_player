@@ -1,5 +1,10 @@
 package json.response;
 
+import pandora.ErrorHandler;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class JSONResponse {
 
 	private String stat;
@@ -20,5 +25,17 @@ public abstract class JSONResponse {
 	public void setCode(int code) {
 		this.code = code;
 	}
-
+	
+	public static <T extends JSONResponse> T loadFromJson(String json, Class<T> type) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		T json_t = null;
+		try {
+			json_t = mapper.readValue(json, type);
+		} catch (Exception e) {
+			ErrorHandler.logJSON(json);
+			e.printStackTrace();
+		}
+		return json_t;
+	}
 }
