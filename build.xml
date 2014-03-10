@@ -1,0 +1,23 @@
+<project name="Pandora Player" basedir="." default="all">
+
+	<property name="src" value="src" />
+    <property name="bin" value="bin" />
+    <property name="lib" value="lib" />
+    <property name="dist" value="dist" />
+
+    <path id="classpath">
+    	<fileset dir="${lib}" includes="*.jar" />
+    </path>
+
+    <target name="init">
+    	<mkdir dir="${bin}" />
+    	<mkdir dir="${dist}" />
+    </target>
+
+    <target name="compile" depends="init">
+    	<javac srcdir="${src}" destdir="${bin}" classpathref="classpath" />
+    </target>
+
+    <target name="all" depends="compile" />
+
+</project>
