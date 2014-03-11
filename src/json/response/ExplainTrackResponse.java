@@ -1,6 +1,6 @@
 package json.response;
 
-public class ExplainTrackResponse extends JSONResponse {
+public class ExplainTrackResponse extends JsonResponse {
 	
 	public static class Result {
 		

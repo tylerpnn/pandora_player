@@ -1,7 +1,7 @@
 package json.request;
 
 
-public class UserLoginRequest extends JSONRequest {
+public class UserLoginRequest extends JsonRequest {
 
 	private String loginType, username, password, partnerAuthToken;
 	private long syncTime;

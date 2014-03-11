@@ -1,6 +1,6 @@
 package json.request;
 
-public class PlaylistRequest extends JSONRequest {
+public class PlaylistRequest extends JsonRequest {
 
 	private String userAuthToken, stationToken;
 	

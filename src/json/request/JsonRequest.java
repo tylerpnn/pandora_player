@@ -3,7 +3,7 @@ package json.request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JSONRequest {
+public class JsonRequest {
 
 	public String toString() {
 		ObjectMapper mapper = new ObjectMapper();

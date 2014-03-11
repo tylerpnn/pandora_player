@@ -5,7 +5,7 @@ import java.util.Map;
 
 import json.response.PlaylistResponse.Result.SongInfo;
 
-public class PlaylistResponse extends JSONResponse {
+public class PlaylistResponse extends JsonResponse {
 
 	public static class Result {
 		

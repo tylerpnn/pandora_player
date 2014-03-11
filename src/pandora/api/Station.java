@@ -6,7 +6,7 @@ import java.util.List;
 import json.request.FeedbackRequest;
 import json.request.PlaylistRequest;
 import json.response.FeedbackResponse;
-import json.response.JSONResponse;
+import json.response.JsonResponse;
 import json.response.PlaylistResponse;
 import json.response.PlaylistResponse.Result.SongInfo;
 import json.response.StationListResponse.Result.StationInfo;
@@ -25,7 +25,7 @@ public class Station {
 		Request req = new Request("station.getPlaylist", user, plreq, true);
 		RequestHandler.sendRequest(req);
 		
-		PlaylistResponse plres = JSONResponse.loadFromJson(
+		PlaylistResponse plres = JsonResponse.loadFromJson(
 				req.getResponse(), PlaylistResponse.class);
 		List<Song> songs = new ArrayList<>();
 		for(SongInfo songInfo : plres.getSongs()) {
@@ -47,7 +47,7 @@ public class Station {
 		Request req = new Request("station.addFeedback", user, freq, true);
 		RequestHandler.sendRequest(req);
 		
-		FeedbackResponse fres = JSONResponse.loadFromJson(
+		FeedbackResponse fres = JsonResponse.loadFromJson(
 				req.getResponse(), FeedbackResponse.class);
 	}
 }

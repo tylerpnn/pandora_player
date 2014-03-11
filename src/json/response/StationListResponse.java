@@ -2,7 +2,7 @@ package json.response;
 
 import json.response.StationListResponse.Result.StationInfo;
 
-public class StationListResponse extends JSONResponse {
+public class StationListResponse extends JsonResponse {
 
 	public static class Result {
 		

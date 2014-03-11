@@ -1,6 +1,6 @@
 package json.request;
 
-public class ExplainTrackRequest extends JSONRequest {
+public class ExplainTrackRequest extends JsonRequest {
 
 	private String trackToken, userAuthToken;
 	private long syncTime;

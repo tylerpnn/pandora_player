@@ -3,10 +3,11 @@ package pandora;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import json.request.JSONRequest;
+import json.request.JsonRequest;
 
 
 public class Request {
+	
 	private String response;
 	private String params;
 	private String postData;
@@ -14,7 +15,7 @@ public class Request {
 	private Crypt crypt;
 	
 	
-	public Request(String method, UserSession user, JSONRequest reqJson, boolean encrypted) {
+	public Request(String method, UserSession user, JsonRequest jsonReq, boolean encrypted) {
 		crypt = new Crypt();
 		this.encrypted = encrypted;
 		params = "method=" + method;
@@ -32,7 +33,7 @@ public class Request {
 			params += "&user_id=" + user.getUserId();
 		}
 		
-		String json = reqJson.toString();
+		String json = jsonReq.toString();
 		if(this.encrypted) {
 			postData = crypt.byteToHex(crypt.encrypt(json.getBytes()));
 		} else {
@@ -56,7 +57,7 @@ public class Request {
 		this.params = s;
 	}
 	
-	public void setRespose(String response) {
+	public void setResponse(String response) {
 		this.response = response;
 	}
 	

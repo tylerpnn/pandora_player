@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import json.request.StationListRequest;
-import json.response.JSONResponse;
+import json.response.JsonResponse;
 import json.response.StationListResponse;
 import json.response.StationListResponse.Result.StationInfo;
 import pandora.Request;
@@ -19,7 +19,7 @@ public class User {
 		slreq.setUserAuthToken(user.getUserAuthToken());
 		Request req = new Request("user.getStationList", user, slreq, true);
 		RequestHandler.sendRequest(req);
-		StationListResponse slres = JSONResponse.loadFromJson(
+		StationListResponse slres = JsonResponse.loadFromJson(
 				req.getResponse(), StationListResponse.class);
 		
 		Map<String, StationInfo> map = new HashMap<>();

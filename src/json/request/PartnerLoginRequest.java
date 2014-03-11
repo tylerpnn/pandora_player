@@ -1,6 +1,6 @@
 package json.request;
 
-public class PartnerLoginRequest extends JSONRequest {
+public class PartnerLoginRequest extends JsonRequest {
 	
 	private String username, password, deviceModel, version;
 

@@ -5,7 +5,7 @@ import pandora.ErrorHandler;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class JSONResponse {
+public abstract class JsonResponse {
 
 	private String stat;
 	private int code;
@@ -26,7 +26,7 @@ public abstract class JSONResponse {
 		this.code = code;
 	}
 	
-	public static <T extends JSONResponse> T loadFromJson(String json, Class<T> type) {
+	public static <T extends JsonResponse> T loadFromJson(String json, Class<T> type) {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		T json_t = null;

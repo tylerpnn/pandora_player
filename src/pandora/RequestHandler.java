@@ -29,7 +29,7 @@ public class RequestHandler {
 				builder.append(line).append("\n");
 			}
 			String result = builder.toString();
-			req.setRespose(result);
+			req.setResponse(result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

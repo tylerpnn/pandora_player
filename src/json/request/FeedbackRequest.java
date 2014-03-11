@@ -1,6 +1,6 @@
 package json.request;
 
-public class FeedbackRequest extends JSONRequest {
+public class FeedbackRequest extends JsonRequest {
 
 	private String trackToken, stationToken, userAuthToken;
 	private boolean isPositive;

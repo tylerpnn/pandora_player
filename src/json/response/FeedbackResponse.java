@@ -1,6 +1,6 @@
 package json.response;
 
-public class FeedbackResponse extends JSONResponse {
+public class FeedbackResponse extends JsonResponse {
 
 	private String songName, artistName;
 	private int feedbackId, isPositive;

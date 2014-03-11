@@ -137,13 +137,11 @@ public class Player {
 	private void decodeMp4(Song song) {
 		dataLine = null;
 		float oldVol = volume;
-		InputStream in = null;
 		try {
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
 			System.out.println(audioURL.substring(0, audioURL.indexOf(".mp4")+4));
 			URL url = new URL(audioURL);
-			in = url.openStream();
-			MP4Container cont = new MP4Container(in);
+			MP4Container cont = new MP4Container(url.openStream());
 			Movie movie = cont.getMovie();
 			song.setDuration(movie.getDuration());
 			song.setPlaying(true);
@@ -169,16 +167,11 @@ public class Player {
 				chunk = buf.getData();
 				dataLine.write(chunk, 0, chunk.length);
 			}
-			in.close();
 			skip = false;
-			song.setPlaying(false);
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if(in != null)
-					in.close();
-			} catch(Exception e) {}
+			song.setPlaying(false);
 			if(song.isAd())
 				volume = oldVol;
 			if(dataLine != null) {

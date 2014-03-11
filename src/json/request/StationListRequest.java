@@ -1,6 +1,6 @@
 package json.request;
 
-public class StationListRequest extends JSONRequest {
+public class StationListRequest extends JsonRequest {
 
 	private String userAuthToken;
 	private long syncTime;

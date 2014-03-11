@@ -2,7 +2,7 @@ package pandora.api;
 
 import json.request.PartnerLoginRequest;
 import json.request.UserLoginRequest;
-import json.response.JSONResponse;
+import json.response.JsonResponse;
 import json.response.PartnerLoginResponse;
 import json.response.UserLoginResponse;
 import pandora.Crypt;
@@ -22,7 +22,7 @@ public class Auth {
 		Request req = new Request("auth.partnerLogin", user, plreq, false);
 		RequestHandler.sendRequest(req);
 		
-		PartnerLoginResponse plres = JSONResponse.loadFromJson(
+		PartnerLoginResponse plres = JsonResponse.loadFromJson(
 				req.getResponse(), PartnerLoginResponse.class);
 		Crypt c = new Crypt();
 		user.setPartnerAuthToken(plres.getPartnerAuthToken());
@@ -40,7 +40,7 @@ public class Auth {
 		Request req = new Request("auth.userLogin", user, ulreq, true);
 		RequestHandler.sendRequest(req);
 		
-		UserLoginResponse ulres = JSONResponse.loadFromJson(
+		UserLoginResponse ulres = JsonResponse.loadFromJson(
 				req.getResponse(), UserLoginResponse.class);
 		user.setUserAuthToken(ulres.getUserAuthToken());
 		user.setUserId(ulres.getUserId());

@@ -1,6 +1,6 @@
 package json.response;
 
-public class PartnerLoginResponse extends JSONResponse {
+public class PartnerLoginResponse extends JsonResponse {
 	
 	public static class Result {
 		private String syncTime, partnerId, partnerAuthToken;

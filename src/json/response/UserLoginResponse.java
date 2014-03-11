@@ -1,6 +1,6 @@
 package json.response;
 
-public class UserLoginResponse extends JSONResponse {
+public class UserLoginResponse extends JsonResponse {
 	
 	public static class Result {
 		private String userId, userAuthToken;
