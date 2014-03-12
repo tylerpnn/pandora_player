@@ -92,7 +92,7 @@ public class Application {
 		String[] traits = Track.explainTrack(user, song.getSongInfo());
 		String[] format = new String[traits.length];
 		for(int i=0; i < format.length-1; i++) 
-			format[i] = "%s, " + ((i%2==0) ? "\n" : "");
+			format[i] = "%s, " + ((i%2==0) ? "%n" : "");
 		format[format.length-1] = "and %s.";
 		StringBuilder fmt = new StringBuilder("This track was selected because it features ");
 		for(String s : format) fmt.append(s);
