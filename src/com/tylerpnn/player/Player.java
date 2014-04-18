@@ -155,14 +155,14 @@ public class Player {
 			dataLine = AudioSystem.getSourceDataLine(audioFormat);
 			dataLine.open(audioFormat);
 			dataLine.start();
-			setVolume(song.isAd() && Application.getConfig().getMuteAds() ? 0f : volume);
+			setVolume(song.isAd() ? 0f : volume);
 			Frame frame;
 			byte[] chunk;
 			SampleBuffer buf = new SampleBuffer();
 			while(!stop && !skip && track.hasMoreFrames()) {
 				while(!skip && paused) { Thread.sleep(100l); }
 				frame = track.readNextFrame();
-				song.update(frame.getTime());
+				song.setTime(frame.getTime());
 				dec.decodeFrame(frame.getData(), buf);
 				chunk = buf.getData();
 				dataLine.write(chunk, 0, chunk.length);

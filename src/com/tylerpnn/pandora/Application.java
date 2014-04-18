@@ -9,9 +9,6 @@ import com.tylerpnn.pandora.api.Station;
 import com.tylerpnn.pandora.api.Track;
 import com.tylerpnn.pandora.api.User;
 import com.tylerpnn.player.Player;
-import com.tylerpnn.ui.cli.CLI;
-import com.tylerpnn.ui.gui.Configuration;
-import com.tylerpnn.ui.gui.Frame;
 
 public class Application {
 	
@@ -19,7 +16,6 @@ public class Application {
 	private UserInterface ui;
 	private Player player;
 	
-	private static Configuration config;
 
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -30,21 +26,11 @@ public class Application {
 	}
 	
 	public Application(String[] args) {
-		config = Configuration.loadConfig();
-		if(args.length > 0 && args[0].equals("-nogui")) {
-			ui = new CLI(this);
-		} else {
-			ui = new Frame(this);
-		}
+		
 	}
 	
 	public static void exit() {
-		Configuration.writeConfig(config);
 		System.exit(0);
-	}
-	
-	public static Configuration getConfig() {
-		return config;
 	}
 
 	public boolean login(UserInfo uInfo, String proxy) {
@@ -61,7 +47,6 @@ public class Application {
 		this.user = null;
 		player.stop();
 		player = null;
-		config.setRememberUser(false);
 	}
 	
 	public void setProxy(String proxy) {
