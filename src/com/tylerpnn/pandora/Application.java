@@ -9,6 +9,7 @@ import com.tylerpnn.pandora.api.Station;
 import com.tylerpnn.pandora.api.Track;
 import com.tylerpnn.pandora.api.User;
 import com.tylerpnn.player.Player;
+import com.tylerpnn.ui.cli.CLI;
 
 public class Application {
 	
@@ -19,6 +20,7 @@ public class Application {
 
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				new Application(args);
 			}
@@ -26,21 +28,27 @@ public class Application {
 	}
 	
 	public Application(String[] args) {
-		
+
+		ui = new CLI(this);
+		ui.start();
 	}
 	
 	public static void exit() {
 		System.exit(0);
 	}
 
-	public boolean login(UserInfo uInfo, String proxy) {
+	public boolean login(String email, char[] pw, String proxy) {
 		setProxy(proxy);
 		user = new UserSession();
 		Auth.partnerLogin(user);
-		Auth.userLogin(user, uInfo);
+		Auth.userLogin(user, email, pw);
 		User.getStationList(user);
 		player = new Player(this, user);
-		return true;
+		if(user.getUserAuthToken() != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void logout() {
@@ -84,14 +92,7 @@ public class Application {
 	}
 	
 	public String getExplanation(Song song) {
-		String[] traits = Track.explainTrack(user, song.getSongInfo());
-		String[] format = new String[traits.length];
-		for(int i=0; i < format.length-1; i++) 
-			format[i] = "%s, " + ((i%2==0) ? "%n" : "");
-		format[format.length-1] = "and %s.";
-		StringBuilder fmt = new StringBuilder("This track was selected because it features ");
-		for(String s : format) fmt.append(s);
-		return String.format(fmt.toString(), (Object[])traits);
+		return Track.explainTrack(user, song.getSongInfo());
 	}
 	
 	public String getStationName(String stationId) {

@@ -31,7 +31,7 @@ public class Player {
 	public enum PlayerState { PLAYING, PAUSED, WAITING }
 	private static PlayerState status;
 	private static SourceDataLine dataLine;
-	private static float volume = .75f;
+	private static float volume = .7f;
 
 	private Thread playerThread;
 	private boolean paused = false;
@@ -56,6 +56,7 @@ public class Player {
 		this.stop();
 		this.station = station;
 		playerThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				currSong = getNextSong();
 				while(!stop && currSong != null) {
@@ -109,7 +110,7 @@ public class Player {
 			pause();
 	}
 	
-	public synchronized static void setVolume(float level) {
+	public synchronized static float setVolume(float level) {
 		if(level < 0) level = 0;
 		if(level > 1) level = 1;
 		volume = level;
@@ -124,6 +125,7 @@ public class Player {
 				fc.setValue(gain * Math.abs(fc.getMinimum() / 20f));
 			}
 		}
+		return volume;
 	}
 	
 	private Song getNextSong() {
@@ -139,7 +141,7 @@ public class Player {
 		float oldVol = volume;
 		try {
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
-			System.out.println(audioURL.substring(0, audioURL.indexOf(".mp4")+4));
+//			System.out.println(audioURL.substring(0, audioURL.indexOf(".mp4")+4));
 			URL url = new URL(audioURL);
 			MP4Container cont = new MP4Container(url.openStream());
 			Movie movie = cont.getMovie();

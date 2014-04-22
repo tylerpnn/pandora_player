@@ -2,3 +2,4 @@ bin/
 dist/
 .git/
 *.json
+pandora.sh

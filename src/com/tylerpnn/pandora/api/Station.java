@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.tylerpnn.json.request.FeedbackRequest;
 import com.tylerpnn.json.request.PlaylistRequest;
-import com.tylerpnn.json.response.FeedbackResponse;
 import com.tylerpnn.json.response.JsonResponse;
 import com.tylerpnn.json.response.PlaylistResponse;
 import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo;
@@ -44,8 +43,5 @@ public class Station {
 		freq.setSyncTime(user.calcSyncTime());
 		Request req = new Request("station.addFeedback", user, freq, true);
 		RequestHandler.sendRequest(req);
-		
-		FeedbackResponse fres = JsonResponse.loadFromJson(
-				req.getResponse(), FeedbackResponse.class);
 	}
 }

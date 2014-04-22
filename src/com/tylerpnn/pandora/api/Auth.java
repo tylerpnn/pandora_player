@@ -8,7 +8,6 @@ import com.tylerpnn.json.response.UserLoginResponse;
 import com.tylerpnn.pandora.Crypt;
 import com.tylerpnn.pandora.Request;
 import com.tylerpnn.pandora.RequestHandler;
-import com.tylerpnn.pandora.UserInfo;
 import com.tylerpnn.pandora.UserSession;
 
 public class Auth {
@@ -30,16 +29,16 @@ public class Auth {
 		user.setSyncTime(Long.parseLong(c.decryptSyncTime(plres.getSyncTime())));
 	}
 	
-	public static void userLogin(UserSession user, UserInfo uInfo) {
+	public static void userLogin(UserSession user, String email, char[] pw) {
 		UserLoginRequest ulreq = new UserLoginRequest();
 		ulreq.setLoginType("user");
 		ulreq.setPartnerAuthToken(user.getPartnerAuthToken());
-		ulreq.setUsername(uInfo.getUsername());
-		ulreq.setPassword(String.valueOf(uInfo.getPassword()));
+		ulreq.setUsername(email);
+		ulreq.setPassword(String.valueOf(pw));
 		ulreq.setSyncTime(user.calcSyncTime());
 		Request req = new Request("auth.userLogin", user, ulreq, true);
 		RequestHandler.sendRequest(req);
-		
+		ulreq.setPassword(null);
 		UserLoginResponse ulres = JsonResponse.loadFromJson(
 				req.getResponse(), UserLoginResponse.class);
 		user.setUserAuthToken(ulres.getUserAuthToken());

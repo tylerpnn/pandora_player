@@ -11,7 +11,7 @@ import com.tylerpnn.pandora.UserSession;
 
 public class Track {
 
-	public static String[] explainTrack(UserSession user, SongInfo song) {
+	public static String explainTrack(UserSession user, SongInfo song) {
 		ExplainTrackRequest etreq = new ExplainTrackRequest();
 		etreq.setTrackToken(song.getTrackToken());
 		etreq.setUserAuthToken(user.getUserAuthToken());
@@ -22,10 +22,16 @@ public class Track {
 		ExplainTrackResponse etres = JsonResponse.loadFromJson(
 				req.getResponse(), ExplainTrackResponse.class);
 		Explanation[] explanations = etres.getResult().getExplanations();
-		String[] s = new String[explanations.length-1];
-		for(int i=0; i<s.length; i++) {
-			s[i] = explanations[i].getFocusTraitName();
+		String[] traits = new String[explanations.length-1];
+		for(int i=0; i<traits.length; i++) {
+			traits[i] = explanations[i].getFocusTraitName();
 		}
-		return s;
+		String[] format = new String[traits.length];
+		for(int i=0; i < format.length-1; i++) 
+			format[i] = "%s, " + ((i%2==0) ? "%n" : "");
+		format[format.length-1] = "and %s.";
+		StringBuilder fmt = new StringBuilder("This track was selected because it features ");
+		for(String s : format) fmt.append(s);
+		return String.format(fmt.toString(), (Object[])traits);
 	}
 }
