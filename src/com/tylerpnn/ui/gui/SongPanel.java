@@ -33,7 +33,6 @@ public class SongPanel extends JPanel {
 		new Thread(new Runnable() {
 			public void run() {
 				while(song.isPlaying()) {
-					System.out.println(sd.getSong().getSongInfo().getSongName());
 					sd.update();
 					try {
 						Thread.sleep(1000);
