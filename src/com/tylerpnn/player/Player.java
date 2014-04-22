@@ -140,7 +140,6 @@ public class Player {
 		float oldVol = volume;
 		try {
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
-//			System.out.println(audioURL.substring(0, audioURL.indexOf(".mp4")+4));
 			URL url = new URL(audioURL);
 			MP4Container cont = new MP4Container(url.openStream());
 			Movie movie = cont.getMovie();

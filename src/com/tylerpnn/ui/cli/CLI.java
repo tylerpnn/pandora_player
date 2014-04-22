@@ -2,6 +2,8 @@ package com.tylerpnn.ui.cli;
 
 import java.util.Arrays;
 
+import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo;
+import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo.AudioUrlMap.AudioUrl;
 import com.tylerpnn.pandora.Application;
 import com.tylerpnn.pandora.Song;
 import com.tylerpnn.pandora.UserInterface;
@@ -76,7 +78,7 @@ public class CLI implements UserInterface {
 		String[] stations = app.getStationList();
 		c.println("");
 		for(int i=0; i<stations.length; i++) {
-			c.printf("%d) %s%n", i, stations[i]);
+			c.printf("%d) %s\n", i, stations[i]);
 		}
 		int num = Integer.parseInt(c.readLine("%s", "Choose Station: "));
 		c.println("\r");
@@ -94,7 +96,7 @@ public class CLI implements UserInterface {
 	public void displaySong(Song song) {
 		this.currentSong = song;
 		int rating = song.getSongInfo().getSongRating();		
-		c.printf("\r>%s \"%s\" by %s on %s %s%n",
+		c.printf("\r>%s \"%s\" by %s on %s %s\n",
 				(rating > 0) ? "+" : "",
 				song.getSongInfo().getSongName(),
 				song.getSongInfo().getArtistName(),
@@ -117,9 +119,40 @@ public class CLI implements UserInterface {
 					"+\t Thumbs up\n" +
 					"-\t Thumbs down\n" +
 					"[\t Volume down\n" +
-					"]\t Volume up\n");
+					"]\t Volume up\n" +
+					"e\t Song explanation\n" +
+					"$\t Debug info\n");
 		displaySong(currentSong);
 		pause=false;
+	}
+	
+	public void printDebugInfo() {
+		pause = true;
+		SongInfo si = currentSong.getSongInfo();
+		AudioUrl aurl =  si.getAudioUrlMap().getHighQuality();
+		c.println("\n\nSong name:\t" + si.getSongName() +
+				"\nSong identity:\t" + si.getSongIdentity() +
+				"\nSong rating:\t" + si.getSongRating() +
+				"\nArtist name:\t" + si.getArtistName() +
+				"\nAlbum name:\t" + si.getAlbumName() +
+				"\nTrack token:\t" + si.getTrackToken() +
+				"\nStation name:\t" + app.getStationName(si.getStationId()) +
+				"\nStation id:\t" + si.getStationId() + 
+				"\nAlbum url:\t" + si.getAlbumArtUrl());
+		String audioURL = aurl.getAudioUrl();
+		c.println("Audio url:\t" + audioURL.substring(0, audioURL.indexOf(".mp4")+4) +
+				"\nProtocol:\t" + aurl.getProtocol() +
+				"\nEncoding:\t" + aurl.getEncoding() +
+				"\nBitrate:\t\n" +aurl.getBitrate());
+		displaySong(currentSong);
+		pause = false;
+	}
+	
+	public void printExplanation() {
+		pause = true;
+		c.printf("\n%s\n\n",app.getExplanation(currentSong));
+		displaySong(currentSong);
+		pause = false;
 	}
 	
 	public void handleKey(char ch) {
@@ -146,8 +179,14 @@ public class CLI implements UserInterface {
 		case '[':
 			modVolume(-.1f);
 			break;
+		case 'e':
+			printExplanation();
+			break;
 		case '?':
 			printHelp();
+			break;
+		case '$':
+			printDebugInfo();
 			break;
 		default:
 			break;
