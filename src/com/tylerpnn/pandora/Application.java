@@ -10,6 +10,7 @@ import com.tylerpnn.pandora.api.Track;
 import com.tylerpnn.pandora.api.User;
 import com.tylerpnn.player.Player;
 import com.tylerpnn.ui.cli.CLI;
+import com.tylerpnn.ui.gui.Frame;
 
 public class Application {
 	
@@ -28,8 +29,11 @@ public class Application {
 	}
 	
 	public Application(String[] args) {
-
-		ui = new CLI(this);
+		if(args.length > 0 && args[0].equals("-nogui")) {
+			ui = new CLI(this);
+		} else {
+			ui = new Frame(this);
+		}
 		ui.start();
 	}
 	

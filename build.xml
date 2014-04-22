@@ -27,6 +27,7 @@
 		<jar basedir="${bin}" jarfile="${dist}/pandora.jar" >
 			<include name="**/*.class" />
 			<zipgroupfileset dir="${lib}" includes="*.jar" />
+			<fileset dir="${src}" includes="res/**" />
 			<zipfileset dir="." includes="libTerminal.so" />
 			<manifest>
 				<attribute name="Main-Class" value="com.tylerpnn.pandora.Application" />
