@@ -1,1 +1,1 @@
-100% Cross-Platform Pandora client written in java. Work in progress.
+Pandora client written in Java. Fully cross platform in GUI mode, with a CLI mode (-nogui) for Linux systems.
