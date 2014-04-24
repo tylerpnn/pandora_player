@@ -4,7 +4,7 @@ public class PartnerLoginResponse extends JsonResponse {
 	
 	public static class Result {
 		
-		String syncTime, partnerId, partnerAuthToken;
+		private String syncTime, partnerId, partnerAuthToken;
 
 		public String getSyncTime() {
 			return syncTime;

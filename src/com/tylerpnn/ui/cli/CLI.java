@@ -96,7 +96,7 @@ public class CLI implements UserInterface {
 	@Override
 	public void displaySong(Song song) {
 		this.currentSong = song;
-		int rating = song.getSongInfo().getSongRating();		
+		int rating = song.getSongRating();
 		c.printf("\r>%s \"%s\" by %s on %s %s\n",
 				(rating > 0) ? "+" : "",
 				song.getSongInfo().getSongName(),
@@ -157,6 +157,14 @@ public class CLI implements UserInterface {
 		pause = false;
 	}
 	
+	public void setFeedback(Song song, int feedback) {
+		app.setFeedback(song, feedback);
+		pause = true;
+		c.print("\r");
+		displaySong(currentSong);
+		pause = false;
+	}
+	
 	public void quit() {
 		term.enable();
 		Application.exit();
@@ -175,10 +183,10 @@ public class CLI implements UserInterface {
 			pickStation();
 			break;
 		case '+':
-			app.setFeedback(currentSong, 1);
+			setFeedback(currentSong, 1);
 			break;
 		case '-':
-			app.setFeedback(currentSong, -1);
+			setFeedback(currentSong, -1);
 			break;
 		case ']':
 			modVolume(.1f);

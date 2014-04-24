@@ -44,13 +44,10 @@ public class Application {
 		user = new UserSession();
 		Auth.partnerLogin(user);
 		Auth.userLogin(user, email, pw);
+		if(user.getUserAuthToken() == null) return false;
 		User.getStationList(user);
 		player = new Player(this, user);
-		if(user.getUserAuthToken() != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 
 	public void logout() {
@@ -88,7 +85,7 @@ public class Application {
 	}
 
 	public void setFeedback(Song song, int feedback) {
-		Station.addFeedback(user, song.getSongInfo(), (feedback > 0));
+		Station.addFeedback(user, song, (feedback > 0));
 		if(feedback < 0 && song.isPlaying())
 			skipSong();
 	}

@@ -112,7 +112,6 @@ public class SongDisplay extends JPanel implements MouseListener {
 	
 	public void setFeedback(int feedback) {
 		parent.setFeedback(song, feedback);
-		song.setSongRating(feedback);
 		update();
 	}
 	

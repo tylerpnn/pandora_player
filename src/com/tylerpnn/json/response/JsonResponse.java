@@ -1,9 +1,8 @@
 package com.tylerpnn.json.response;
 
-import java.io.StringReader;
-
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import com.tylerpnn.pandora.ErrorHandler;
+import com.tylerpnn.pandora.ErrorHandler.PandoraServerException;
 
 public abstract class JsonResponse {
 
@@ -26,9 +25,16 @@ public abstract class JsonResponse {
 		this.code = code;
 	}
 	
-	public static <T> T loadFromJson(String json, Class<T> type) {
-		JsonReader reader = new JsonReader(new StringReader(json));
-		reader.setLenient(true);
-		return new Gson().fromJson(reader, type);
+	public <T extends JsonResponse> T loadFromJson(String json) {
+		T t = null;
+		try {
+			t = (T) new Gson().fromJson(json, this.getClass());
+			if(!t.getStat().equalsIgnoreCase("ok"))
+				ErrorHandler.errorCheck(t.getCode());
+		} catch(PandoraServerException pse) {
+			return null;
+		}
+		return t;
+//		return (T) new Gson().fromJson(json, this.getClass());
 	}
 }

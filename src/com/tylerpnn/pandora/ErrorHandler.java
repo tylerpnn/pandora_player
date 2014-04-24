@@ -16,9 +16,9 @@ public class ErrorHandler {
 	}
 	
 	public static void logJSON(String json) {
-		json = json.replace("{", "%n{%n");
-		json = json.replace("}", "%n}%n");
-		json = json.replace(",", ",%n");
+		json = json.replace("{", "\n{\n");
+		json = json.replace("}", "\n}\n");
+		json = json.replace(",", ",\n");
 		try {
 			PrintWriter p = new PrintWriter(new File(System.currentTimeMillis()/1000 + ".json"));
 			p.write(json, 0, json.length());

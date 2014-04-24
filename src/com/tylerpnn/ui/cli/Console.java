@@ -11,7 +11,7 @@ public class Console {
 	}
 	
 	public void println(Object s) {
-		c.printf("%s%n", s.toString());
+		c.printf("%s\n", s.toString());
 	}
 	
 	public void printf(String fmt, Object ... args) {

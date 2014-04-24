@@ -4,7 +4,11 @@ public class PlaylistRequest extends JsonRequest {
 
 	private String userAuthToken, stationToken;	
 	private long syncTime;
-
+	private boolean includeTrackLength;
+	
+	public void setIncludeTrackLength(boolean b) {
+		this.includeTrackLength = true;
+	}
 	public void setUserAuthToken(String userAuthToken) {
 		this.userAuthToken = userAuthToken;
 	}

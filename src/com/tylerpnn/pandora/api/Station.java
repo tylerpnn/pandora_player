@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.tylerpnn.json.request.FeedbackRequest;
 import com.tylerpnn.json.request.PlaylistRequest;
-import com.tylerpnn.json.response.JsonResponse;
 import com.tylerpnn.json.response.PlaylistResponse;
 import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo;
 import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
@@ -21,11 +20,11 @@ public class Station {
 		plreq.setStationToken(station.getStationToken());
 		plreq.setSyncTime(user.calcSyncTime());
 		plreq.setUserAuthToken(user.getUserAuthToken());
+		plreq.setIncludeTrackLength(true);
 		Request req = new Request("station.getPlaylist", user, plreq, true);
 		RequestHandler.sendRequest(req);
-		
-		PlaylistResponse plres = JsonResponse.loadFromJson(
-				req.getResponse(), PlaylistResponse.class);
+		PlaylistResponse plres = 
+				new PlaylistResponse().loadFromJson(req.getResponse());
 		List<Song> songs = new ArrayList<>();
 		for(SongInfo songInfo : plres.getSongs()) {
 			if(songInfo.getSongIdentity() == null) continue;
@@ -34,14 +33,15 @@ public class Station {
 		return songs.toArray(new Song[songs.size()]);
 	}
 	
-	public static void addFeedback(UserSession user, SongInfo song, boolean isPositive) {
+	public static void addFeedback(UserSession user, Song song, boolean isPositive) {
 		FeedbackRequest freq = new FeedbackRequest();
-		freq.setTrackToken(song.getTrackToken());
+		freq.setTrackToken(song.getSongInfo().getTrackToken());
 		freq.setIsPositive(isPositive);
-		freq.setStationToken(song.getStationId());
+		freq.setStationToken(song.getSongInfo().getStationId());
 		freq.setUserAuthToken(user.getUserAuthToken());
 		freq.setSyncTime(user.calcSyncTime());
 		Request req = new Request("station.addFeedback", user, freq, true);
 		RequestHandler.sendRequest(req);
+		song.setSongRating(isPositive ? 1 : -1);
 	}
 }

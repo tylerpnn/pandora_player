@@ -58,9 +58,9 @@ public class Player {
 		playerThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				currSong = getNextSong();
-				while(!stop && currSong != null) {
+				while(!stop) {
 					currSong = getNextSong();
+					if(currSong == null) break;
 					decodeMp4(currSong);
 				}
 			}

@@ -2,7 +2,6 @@ package com.tylerpnn.pandora.api;
 
 import com.tylerpnn.json.request.PartnerLoginRequest;
 import com.tylerpnn.json.request.UserLoginRequest;
-import com.tylerpnn.json.response.JsonResponse;
 import com.tylerpnn.json.response.PartnerLoginResponse;
 import com.tylerpnn.json.response.UserLoginResponse;
 import com.tylerpnn.pandora.Crypt;
@@ -21,8 +20,10 @@ public class Auth {
 		Request req = new Request("auth.partnerLogin", user, plreq, false);
 		RequestHandler.sendRequest(req);
 		
-		PartnerLoginResponse plres = JsonResponse.loadFromJson(
-				req.getResponse(), PartnerLoginResponse.class);
+//		PartnerLoginResponse plres = JsonResponse.loadFromJson(
+//				req.getResponse(), PartnerLoginResponse.class);
+		PartnerLoginResponse plres = 
+				new PartnerLoginResponse().loadFromJson(req.getResponse());
 		Crypt c = new Crypt();
 		user.setPartnerAuthToken(plres.getPartnerAuthToken());
 		user.setPartnerId(plres.getPartnerId());
@@ -39,9 +40,11 @@ public class Auth {
 		Request req = new Request("auth.userLogin", user, ulreq, true);
 		RequestHandler.sendRequest(req);
 		ulreq.setPassword(null);
-		UserLoginResponse ulres = JsonResponse.loadFromJson(
-				req.getResponse(), UserLoginResponse.class);
-		user.setUserAuthToken(ulres.getUserAuthToken());
-		user.setUserId(ulres.getUserId());
+		UserLoginResponse ulres = 
+				new UserLoginResponse().loadFromJson(req.getResponse());
+		if(ulres != null) {
+			user.setUserAuthToken(ulres.getUserAuthToken());
+			user.setUserId(ulres.getUserId());
+		}
 	}
 }

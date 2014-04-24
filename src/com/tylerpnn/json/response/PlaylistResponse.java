@@ -56,7 +56,7 @@ public class PlaylistResponse extends JsonResponse {
 				albumIdentity, songName, albumDetailUrl, songDetailUrl;
 			
 			private AudioUrlMap audioUrlMap;
-			private int songRating;
+			private int songRating, trackLength;
 
 			public String getSongIdentity() {
 				return songIdentity;
@@ -96,6 +96,9 @@ public class PlaylistResponse extends JsonResponse {
 			}
 			public String getStationId() {
 				return stationId;
+			}
+			public int getTrackLength() {
+				return this.trackLength;
 			}
 		}
 		
