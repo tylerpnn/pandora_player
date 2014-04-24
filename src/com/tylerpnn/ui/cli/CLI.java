@@ -122,7 +122,8 @@ public class CLI implements UserInterface {
 					"[\t Volume down\n" +
 					"]\t Volume up\n" +
 					"e\t Song explanation\n" +
-					"$\t Debug info\n");
+					"$\t Debug info\n" +
+					"q\t Quit\n");
 		displaySong(currentSong);
 		pause=false;
 	}
@@ -144,7 +145,7 @@ public class CLI implements UserInterface {
 		c.println("Audio url:\t" + audioURL.substring(0, audioURL.indexOf(".mp4")+4) +
 				"\nProtocol:\t" + aurl.getProtocol() +
 				"\nEncoding:\t" + aurl.getEncoding() +
-				"\nBitrate:\t\n" +aurl.getBitrate());
+				"\nBitrate:\t" +aurl.getBitrate() + "\n");
 		displaySong(currentSong);
 		pause = false;
 	}
@@ -154,6 +155,11 @@ public class CLI implements UserInterface {
 		c.printf("\n%s\n\n",app.getExplanation(currentSong));
 		displaySong(currentSong);
 		pause = false;
+	}
+	
+	public void quit() {
+		term.enable();
+		Application.exit();
 	}
 	
 	public void handleKey(char ch) {
@@ -188,6 +194,9 @@ public class CLI implements UserInterface {
 			break;
 		case '$':
 			printDebugInfo();
+			break;
+		case 'q':
+			quit();
 			break;
 		default:
 			break;

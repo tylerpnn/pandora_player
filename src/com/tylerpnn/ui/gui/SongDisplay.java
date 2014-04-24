@@ -83,7 +83,7 @@ public class SongDisplay extends JPanel implements MouseListener {
         	g.drawString(t, getWidth() - g.getFontMetrics().stringWidth(t) - 15, getHeight() - 23);
         	drawProgress(g);
         }
-        if(song.getSongInfo().getSongRating() != 0) {
+        if(song.getSongRating() != 0) {
         	g.setColor((song.getSongInfo().getSongRating() > 0) 
         			? Color.orange : new Color(187, 187, 242));
         	int[] xp = new int[] { 0, 0, 20 },
@@ -112,7 +112,7 @@ public class SongDisplay extends JPanel implements MouseListener {
 	
 	public void setFeedback(int feedback) {
 		parent.setFeedback(song, feedback);
-		song.getSongInfo().setSongRating(feedback);
+		song.setSongRating(feedback);
 		update();
 	}
 	

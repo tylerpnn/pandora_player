@@ -1,8 +1,9 @@
 package com.tylerpnn.json.response;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tylerpnn.pandora.ErrorHandler;
+import java.io.StringReader;
+
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 public abstract class JsonResponse {
 
@@ -25,16 +26,9 @@ public abstract class JsonResponse {
 		this.code = code;
 	}
 	
-	public static <T extends JsonResponse> T loadFromJson(String json, Class<T> type) {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		T json_t = null;
-		try {
-			json_t = mapper.readValue(json, type);
-		} catch (Exception e) {
-			ErrorHandler.logJSON(json);
-			e.printStackTrace();
-		}
-		return json_t;
+	public static <T> T loadFromJson(String json, Class<T> type) {
+		JsonReader reader = new JsonReader(new StringReader(json));
+		reader.setLenient(true);
+		return new Gson().fromJson(reader, type);
 	}
 }

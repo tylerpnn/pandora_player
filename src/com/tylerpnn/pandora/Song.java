@@ -9,9 +9,11 @@ public class Song {
 	private double duration;
 	private double time;
 	private boolean isAd;
+	private int songRating;
 	
 	public Song(SongInfo songInfo) {
 		this.songInfo = songInfo;
+		this.songRating = songInfo.getSongRating();
 	}
 	
 	public SongInfo getSongInfo() {
@@ -49,5 +51,13 @@ public class Song {
 	
 	public boolean isAd() {
 		return this.isAd;
+	}
+
+	public int getSongRating() {
+		return songRating;
+	}
+
+	public void setSongRating(int songRating) {
+		this.songRating = songRating;
 	}
 }

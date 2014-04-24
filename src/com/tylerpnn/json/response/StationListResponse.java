@@ -15,44 +15,23 @@ public class StationListResponse extends JsonResponse {
 			public String getStationName() {
 				return stationName;
 			}
-			public void setStationName(String stationName) {
-				this.stationName = stationName;
-			}
 			public String getStationId() {
 				return stationId;
-			}
-			public void setStationId(String stationId) {
-				this.stationId = stationId;
 			}
 			public String getStationToken() {
 				return stationToken;
 			}
-			public void setStationToken(String stationToken) {
-				this.stationToken = stationToken;
-			}
 			public String getStationDetailUrl() {
 				return stationDetailUrl;
-			}
-			public void setStationDetailUrl(String stationDetailUrl) {
-				this.stationDetailUrl = stationDetailUrl;
 			}
 			public boolean isQuickMix() {
 				return isQuickMix;
 			}
-			public void setQuickMix(boolean isQuickMix) {
-				this.isQuickMix = isQuickMix;
-			}
 			public String[] getGenres() {
 				return genres;
 			}
-			public void setGenres(String[] genres) {
-				this.genres = genres;
-			}
 			public String[] getQuickMixStationIds() {
 				return quickMixStationIds;
-			}
-			public void setQuickMixStationIds(String[] quickMixStationIds) {
-				this.quickMixStationIds = quickMixStationIds;
 			}			
 		}
 		
@@ -61,22 +40,13 @@ public class StationListResponse extends JsonResponse {
 		public StationInfo[] getStations() {
 			return stations;
 		}
-
-		public void setStations(StationInfo[] stations) {
-			this.stations = stations;
-		}
 	}
 	
 	private Result result;
 
 	public Result getResult() {
 		return result;
-	}
-
-	public void setResult(Result result) {
-		this.result = result;
-	}
-	
+	}	
 	public StationInfo[] getStations() {
 		return result.getStations();
 	}

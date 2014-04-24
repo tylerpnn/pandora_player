@@ -12,12 +12,12 @@ import org.apache.http.impl.client.HttpClients;
 
 public class RequestHandler {
 	
-	private static final String _url = "http://tuner.pandora.com/services/json/?";
+	private static final String URL = "http://tuner.pandora.com/services/json/?";
 
 	public static void sendRequest(Request req) {
 		
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost post = new HttpPost(_url + req.getParams());
+		HttpPost post = new HttpPost(URL + req.getParams());
 		post.addHeader("Content-Type", "text/plain;charset=UTF-8");
 		try {
 			StringEntity j = new StringEntity(req.getPostData());

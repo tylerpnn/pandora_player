@@ -1,7 +1,6 @@
 package com.tylerpnn.ui.gui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 public class UserInfo {
 	
@@ -39,13 +38,6 @@ public class UserInfo {
 	}
 	
 	public String toString() {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
+		return new Gson().toJson(this);
 	}
 }

@@ -6,11 +6,7 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.tylerpnn.pandora.Crypt;
 
 public final class Configuration {
@@ -71,14 +67,7 @@ public final class Configuration {
 	}
 	
 	public String toString() {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		try {
-			json = mapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
+		return new Gson().toJson(this);
 	}
 	
 	public static void writeConfig(Configuration config) {
@@ -102,8 +91,7 @@ public final class Configuration {
 			try {
 				byte[] encoded = Files.readAllBytes(Paths.get(CONFIG_DIR));
 				byte[] decoded = new Crypt().decrypt(encoded);
-				ObjectMapper mapper = new ObjectMapper();
-				config = mapper.readValue(decoded, Configuration.class);
+				config = new Gson().fromJson(new String(decoded), Configuration.class);
 			} catch(Exception e) {
 				e.printStackTrace();
 				config = new Configuration();
@@ -123,11 +111,10 @@ public final class Configuration {
 	}
 
 	public static class Location {
-		public final int x;
-		public final int y;
+		public int x;
+		public int y;
 		
-		@JsonCreator
-		public Location(@JsonProperty("x") int x, @JsonProperty("y") int y) {
+		public Location(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
@@ -137,7 +124,6 @@ public final class Configuration {
 			this.y = p.y;
 		}
 		
-		@JsonIgnore
 		public Point getPoint() {
 			return new Point(x, y);
 		}

@@ -8,17 +8,8 @@ public class UserLoginResponse extends JsonResponse {
 		public String getUserAuthToken() {
 			return userAuthToken;
 		}
-
-		public void setUserAuthToken(String userAuthToken) {
-			this.userAuthToken = userAuthToken;
-		}
-
 		public String getUserId() {
 			return userId;
-		}
-
-		public void setUserId(String userId) {
-			this.userId = userId;
 		}
 	}
 	
@@ -26,10 +17,6 @@ public class UserLoginResponse extends JsonResponse {
 	
 	public Result getResult() {
 		return result;
-	}
-	
-	public void setResult(Result r) {
-		result = r;
 	}
 	
 	public String getUserId() {

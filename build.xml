@@ -17,6 +17,10 @@
 	<target name="init" depends="clean">
 		<mkdir dir="${bin}" />
 		<mkdir dir="${dist}" />
+		<mkdir dir="${bin}/res" />
+		<copy todir="${bin}/res">
+		    <fileset dir="${src}/res"/>
+		</copy>
 	</target>
 
     <target name="compile" depends="init">

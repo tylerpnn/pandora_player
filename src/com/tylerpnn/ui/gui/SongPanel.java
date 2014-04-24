@@ -13,13 +13,13 @@ public class SongPanel extends JPanel {
 	private Frame frame;
 	private SongDisplay selected;
 	private SongDisplay current;
-	
+
 	public SongPanel(Frame frame) {
 		this.frame = frame;
 		this.setBackground(Color.white);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
-	
+
 	public void addSong(final Song song) {
 		final SongDisplay sd = new SongDisplay(this, song);
 		if(current != null) {
@@ -43,7 +43,7 @@ public class SongPanel extends JPanel {
 			}
 		}).start();
 	}
-	
+
 	public void scroll(SongDisplay sd) {
 		if(frame.getScrollBar().isVisible()) {
 			sd.setPreferredSize(new Dimension(sd.getWidth() - frame.getScrollBar().getWidth(), sd.getHeight()));
@@ -54,7 +54,7 @@ public class SongPanel extends JPanel {
 			frame.getScrollBar().setValue(sd.getLocation().y);
 		}
 	}
-	
+
 	public void select(SongDisplay sd) {
 		if(selected != null || selected == sd) {
 			if(selected.getSong().isPlaying()) {
@@ -70,15 +70,15 @@ public class SongPanel extends JPanel {
 			selected = null;
 		}
 	}
-	
+
 	public String getStationName(String stationId) {
 		return frame.getStationName(stationId);
 	}
-	
+
 	public void setFeedback(Song song, int feedback) {
 		frame.setFeedback(song, feedback);
 	}
-	
+
 	public void explainTrack(Song song) {
 		frame.explainTrack(song);
 	}
