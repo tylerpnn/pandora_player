@@ -15,6 +15,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
 import com.tylerpnn.player.Player;
 import com.tylerpnn.player.Player.PlayerState;
 
@@ -59,7 +60,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 	}
 	
 	private JSlider volSlider() {
-		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 75);
+		final JSlider vol = new JSlider(JSlider.HORIZONTAL, 0, 100, 70);
 		vol.setMaximumSize(new Dimension(125, 30));
 		vol.setPreferredSize(vol.getMaximumSize());
 		vol.setMinimumSize(vol.getMaximumSize());
@@ -81,8 +82,12 @@ public class ToolBar extends JToolBar implements ActionListener {
 		this.stationCombo.setSelectedItem(stationName);
 	}
 	
-	public void setStations(String[] stations) {
-		DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>(stations);
+	public void setStations(StationInfo[] stations) {
+		String[] stationNames = new String[stations.length];
+		for(int i=0; i < stations.length; i++) {
+			stationNames[i] = stations[i].getStationName();
+		}
+		DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>(stationNames);
 		this.stationCombo.setModel(m);
 	}
 	

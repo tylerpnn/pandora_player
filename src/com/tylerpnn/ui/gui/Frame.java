@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
+import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
 import com.tylerpnn.pandora.Application;
 import com.tylerpnn.pandora.Song;
 import com.tylerpnn.pandora.UserInterface;
@@ -136,7 +137,7 @@ public class Frame extends JFrame implements UserInterface, WindowListener {
 		app.logout();
 		songPanel.removeAll();
 		repaint();
-		bar.setStations(new String[0]);
+		bar.setStations(new StationInfo[0]);
 		this.setTitle("Pandora Player");
 		menuBar.loggedOut();
 	}
@@ -163,7 +164,7 @@ public class Frame extends JFrame implements UserInterface, WindowListener {
 		}
 	}
 	
-	public String[] getStationList() {
+	public StationInfo[] getStationList() {
 		return app.getStationList();
 	}
 	

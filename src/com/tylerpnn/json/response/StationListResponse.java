@@ -7,9 +7,10 @@ public class StationListResponse extends JsonResponse {
 	public static class Result {
 		
 		public static class StationInfo {
+			
 			private String stationName, stationId, stationToken, stationDetailUrl;
 			private boolean isQuickMix;
-			private String[] genres;
+			private String[] genres, quickMixStationIds;
 			
 			public String getStationName() {
 				return stationName;
@@ -46,6 +47,12 @@ public class StationListResponse extends JsonResponse {
 			}
 			public void setGenres(String[] genres) {
 				this.genres = genres;
+			}
+			public String[] getQuickMixStationIds() {
+				return quickMixStationIds;
+			}
+			public void setQuickMixStationIds(String[] quickMixStationIds) {
+				this.quickMixStationIds = quickMixStationIds;
 			}			
 		}
 		

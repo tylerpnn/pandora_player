@@ -1,9 +1,8 @@
 package com.tylerpnn.pandora;
 
-import java.util.Set;
-
 import javax.swing.SwingUtilities;
 
+import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
 import com.tylerpnn.pandora.api.Auth;
 import com.tylerpnn.pandora.api.Station;
 import com.tylerpnn.pandora.api.Track;
@@ -21,7 +20,6 @@ public class Application {
 
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				new Application(args);
 			}
@@ -103,13 +101,7 @@ public class Application {
 		return user.getStationInfoById(stationId).getStationName();
 	}
 	
-	public String[]	getStationList() {
-		Set<String> stations = null;
-		if(user != null && user.getStations() != null) {
-			stations = user.getStations().keySet();
-			return stations.toArray(new String[stations.size()]);
-		} else {
-			return new String[0];
-		}
+	public StationInfo[] getStationList() {
+		return user.getStations().values().toArray(new StationInfo[0]);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo;
 import com.tylerpnn.json.response.PlaylistResponse.Result.SongInfo.AudioUrlMap.AudioUrl;
+import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
 import com.tylerpnn.pandora.Application;
 import com.tylerpnn.pandora.Song;
 import com.tylerpnn.pandora.UserInterface;
@@ -75,10 +76,10 @@ public class CLI implements UserInterface {
 	public void pickStation() {
 		pause = true;
 		term.enable();
-		String[] stations = app.getStationList();
+		StationInfo[] stations = app.getStationList();
 		c.println("");
 		for(int i=0; i<stations.length; i++) {
-			c.printf("%d) %s\n", i, stations[i]);
+			c.printf("%d) %s\n", i, stations[i].getStationName());
 		}
 		int num = Integer.parseInt(c.readLine("%s", "Choose Station: "));
 		c.println("\r");
@@ -86,7 +87,7 @@ public class CLI implements UserInterface {
 			pickStation();
 			return;
 		}
-		station = stations[num];
+		station = stations[num].getStationName();
 		app.playStation(station);
 		pause = false;
 		term.disable();
