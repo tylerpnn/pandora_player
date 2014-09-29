@@ -21,6 +21,18 @@ public class CLI implements UserInterface {
 	private String station;
 	private float vol = .7f;
 	
+	private static final String RESET = "\u001B[0m";
+	private static final String BLACK = "\u001B[30m";
+	private static final String RED = "\u001B[31m";
+	private static final String GREEN = "\u001B[32m";
+	private static final String YELLOW = "\u001B[33m";
+	private static final String BLUE = "\u001B[34m";
+	private static final String PURPLE = "\u001B[35m";
+	private static final String CYAN = "\u001B[36m";
+	private static final String WHITE = "\u001B[37m";
+	
+	
+	
 	public CLI(Application app) {
 		if(!System.getProperty("os.name").equals("Linux")) {
 			System.out.println("Console mode only supports Linux");
@@ -45,7 +57,7 @@ public class CLI implements UserInterface {
 		while(true) {
 			System.out.print("");
 			if(!pause && currentSong != null && currentSong.isPlaying()) {
-				c.printf("\r-> %d:%02d / %d:%02d",
+				c.printf("\r-> " + WHITE + "%d:%02d / %d:%02d" + RESET,
 				         (int)currentSong.getTime() / 60,
 				         (int)currentSong.getTime() % 60,
 				         (int)currentSong.getDuration() / 60,
@@ -64,9 +76,9 @@ public class CLI implements UserInterface {
 		char[] pw = c.readPassword("%s", "Password: ");
 		c.print("Login... ");
 		if(app.login(email, pw, null)) {
-			c.println("Ok");
+			c.println(GREEN + "Ok" + RESET);
 		} else {
-			c.println("Fail");
+			c.println(RED + "Fail" + RESET);
 			Application.exit();
 		}
 		Arrays.fill(pw, ' ');
@@ -79,7 +91,7 @@ public class CLI implements UserInterface {
 		StationInfo[] stations = app.getStationList();
 		c.println("");
 		for(int i=0; i<stations.length; i++) {
-			c.printf("%d) %s\n", i, stations[i].getStationName());
+			c.printf(RED + "%d)" + WHITE + " %s\n", i, stations[i].getStationName());
 		}
 		int num = Integer.parseInt(c.readLine("%s", "Choose Station: "));
 		c.println("\r");
@@ -97,7 +109,8 @@ public class CLI implements UserInterface {
 	public void displaySong(Song song) {
 		this.currentSong = song;
 		int rating = song.getSongRating();
-		c.printf("\r>%s \"%s\" by %s on %s %s\n",
+		c.printf("\r>%s " + GREEN + "\"%s\" " + WHITE + "by " + BLUE + "%s " 
+						  + WHITE + "on " + YELLOW + "%s " + RED + "%s\n" + RESET,
 				(rating > 0) ? "+" : "",
 				song.getSongInfo().getSongName(),
 				song.getSongInfo().getArtistName(),
