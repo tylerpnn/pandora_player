@@ -16,101 +16,58 @@ import net.sourceforge.jaad.mp4.api.Frame;
 import net.sourceforge.jaad.mp4.api.Movie;
 import net.sourceforge.jaad.mp4.api.Track;
 
-import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
-import com.tylerpnn.pandora.Application;
 import com.tylerpnn.pandora.Song;
-import com.tylerpnn.pandora.UserSession;
-import com.tylerpnn.pandora.api.Station;
 
 
 public class Player {
-
-	private UserSession user;
-	private Application app;
 	
 	public enum PlayerState { PLAYING, PAUSED, WAITING }
-	private static PlayerState status;
+	private static PlayerState status = PlayerState.WAITING;
 	private static SourceDataLine dataLine;
 	private static float volume = .7f;
 
-	private Thread playerThread;
-	private boolean paused = false;
-	private boolean skip = false;
-	private boolean stop = false;
-	private StationInfo station;
-	private Song[] playlist;
-	private Song currSong;
-	private int index;
+	private static boolean paused = false;
+	private static boolean skip = false;
+	private static boolean stop = false;
 	
-	public Player(Application app, UserSession user) {
-		this.app = app;
-		this.user = user;
-		status = PlayerState.WAITING;
-	}
+	private Player() {}
 	
 	public static PlayerState getStatus() {
 		return status;
 	}
 	
-	public synchronized void playStation(StationInfo station) {
-		this.stop();
-		this.station = station;
-		playerThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(!stop) {
-					currSong = getNextSong();
-					if(currSong == null) break;
-					decodeMp4(currSong);
-				}
-			}
-		});
-		playerThread.setDaemon(true);
-		playerThread.start();
-		status = PlayerState.PLAYING;
+	public static boolean isPaused() {
+		return paused;
 	}
 	
-	public synchronized void stop() {
-		if(playerThread != null) {
-			this.stop = true;
-			try {
-				playerThread.join();
-			} catch (InterruptedException e) {}
-			playerThread = null;
-			this.stop = false;
+	public static void skip() {
+		if(status == PlayerState.PLAYING || status == PlayerState.PAUSED) {
+			skip = true;
+			paused = false;
 		}
-		station = null;
-		playlist = null;
 	}
 	
-	
-	public synchronized void skip() {
-		this.skip = true;
-	}
-	
-	public synchronized boolean isPaused() {
-		return this.paused;
-	}
-	
-	public synchronized void pause() {
-		this.paused = true;
+	private static void pause() {
+		paused = true;
 		status = PlayerState.PAUSED;
 	}
 	
-	public synchronized void play() {
-		this.paused = false;
+	private static void play() {
+		paused = false;
 		status = PlayerState.PLAYING;
 	}
 	
-	public void playToggle() {
-		if(paused)
-			play();
-		else
-			pause();
+	public static void playToggle() {
+		if(paused) play();
+		else pause();
 	}
 	
-	public synchronized static float setVolume(float level) {
-		if(level < 0) level = 0;
+	public static void stopPlaying() {
+		stop = true;
+	}
+	
+	public static float setVolume(float level) {
+		if(level < 0) level = 0; 
 		if(level > 1) level = 1;
 		volume = level;
 		if(dataLine != null) {
@@ -127,30 +84,24 @@ public class Player {
 		return volume;
 	}
 	
-	private Song getNextSong() {
-		if(playlist == null || index >= playlist.length) {
-			playlist = Station.getPlayList(user, station);
-			index = 0;
-		}
-		return playlist[index++];
-	}
-	
-	private void decodeMp4(Song song) {
+	public static void decodeMp4(Song song) {
+		if(status != PlayerState.WAITING) return;
+		
+		status = PlayerState.PLAYING;
 		dataLine = null;
+
 		float oldVol = volume;
 		try {
+			
 			String audioURL = song.getSongInfo().getAudioUrlMap().getHighQuality().getAudioUrl();
 			URL url = new URL(audioURL);
 			MP4Container cont = new MP4Container(url.openStream());
 			Movie movie = cont.getMovie();
 			song.setDuration(movie.getDuration());
-			song.setPlaying(true);
-			app.displaySong(currSong);
 			List<Track> tracks = movie.getTracks(AudioTrack.AudioCodec.AAC);
 			AudioTrack track = (AudioTrack) tracks.get(0);
-			AudioFormat audioFormat = new AudioFormat(track.getSampleRate()/2, 
-					track.getSampleSize(), 
-					track.getChannelCount(), true, true);
+			AudioFormat audioFormat = new AudioFormat(track.getSampleRate() / 2, 
+					track.getSampleSize(), track.getChannelCount(), true, true);
 			Decoder dec = new Decoder(track.getDecoderSpecificInfo());
 			dec.getConfig().setSBREnabled(false);
 			dataLine = AudioSystem.getSourceDataLine(audioFormat);
@@ -178,7 +129,9 @@ public class Player {
 			if(dataLine != null) {
 				dataLine.stop();
 				dataLine.close();
-			}				
+			}
+			status = PlayerState.WAITING;
+			stop = false;
 		}
 	}
 }

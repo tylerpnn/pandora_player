@@ -15,7 +15,7 @@ public class Application {
 
 	private UserSession user;
 	private UserInterface ui;
-	private Player player;
+	private StationThread stationThread;	
 
 
 	public static void main(final String[] args) {
@@ -46,14 +46,12 @@ public class Application {
 		Auth.userLogin(user, email, pw);
 		if(user.getUserAuthToken() == null) return false;
 		User.getStationList(user);
-		player = new Player(this, user);
 		return true;
 	}
 
 	public void logout() {
 		this.user = null;
-		player.stop();
-		player = null;
+		stopPlayer();
 	}
 
 	public void setProxy(String proxy) {
@@ -65,21 +63,24 @@ public class Application {
 			}
 		}
 	}
-
+	
 	public void playStation(String stationName) {
-		player.playStation(user.getStationInfoByName(stationName));
+		this.stopPlayer();
+		this.stationThread = new StationThread(this, user, user.getStationInfoByName(stationName));
+		this.stationThread.setDaemon(true);
+		this.stationThread.start();
 	}
-
-	public void skipSong() {
-		if(player != null)
-			player.skip();
+	
+	public synchronized void stopPlayer() {
+		if(stationThread != null) {
+			stationThread.halt();
+			try {
+				stationThread.join();
+			} catch (InterruptedException e) {}
+			stationThread = null;
+		}
 	}
-
-	public void playToggle() {
-		if(player != null)
-			player.playToggle();
-	}
-
+	
 	public void displaySong(Song song) {
 		ui.displaySong(song);
 	}
@@ -87,7 +88,7 @@ public class Application {
 	public void setFeedback(Song song, int feedback) {
 		Station.addFeedback(user, song, (feedback > 0));
 		if(feedback < 0 && song.isPlaying())
-			skipSong();
+			Player.skip();
 	}
 
 	public String getExplanation(Song song) {

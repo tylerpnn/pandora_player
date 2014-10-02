@@ -76,9 +76,9 @@ public class CLI implements UserInterface {
 		char[] pw = c.readPassword("%s", "Password: ");
 		c.print("Login... ");
 		if(app.login(email, pw, null)) {
-			c.println(GREEN + "Ok" + RESET);
+			c.print(GREEN + "Ok" + RESET);
 		} else {
-			c.println(RED + "Fail" + RESET);
+			c.print(RED + "Fail" + RESET);
 			Application.exit();
 		}
 		Arrays.fill(pw, ' ');
@@ -89,7 +89,7 @@ public class CLI implements UserInterface {
 		pause = true;
 		term.enable();
 		StationInfo[] stations = app.getStationList();
-		c.println("");
+		c.println("\n");
 		for(int i=0; i<stations.length; i++) {
 			c.printf(RED + "%d)" + WHITE + " %s\n", i, stations[i].getStationName());
 		}
@@ -129,7 +129,8 @@ public class CLI implements UserInterface {
 		c.println("\n\nHelp:\n" +
 					"?\t Display this help menu\n" +
 					"p\t Play/Pause\n" +
-					"n\t Next song\n" + 
+					"n\t Next song\n" +
+					"s\t New Station\n" +
 					"+\t Thumbs up\n" +
 					"-\t Thumbs down\n" +
 					"[\t Volume down\n" +
@@ -187,10 +188,10 @@ public class CLI implements UserInterface {
 		if(pause) return;
 		switch(ch) {
 		case 'n':
-			app.skipSong();
+			Player.skip();
 			break;
 		case 'p':
-			app.playToggle();
+			Player.playToggle();
 			break;
 		case 's':
 			pickStation();

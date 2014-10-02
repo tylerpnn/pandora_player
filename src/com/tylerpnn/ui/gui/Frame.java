@@ -109,11 +109,11 @@ public class Frame extends JFrame implements UserInterface, WindowListener {
 	}
 	
 	public void skipSong() {
-		app.skipSong();
+		Player.skip();
 	}
 	
 	public void playToggle() {
-		app.playToggle();
+		Player.playToggle();
 	}
 	
 	public void login(final UserInfo uInfo, final String proxy) {
