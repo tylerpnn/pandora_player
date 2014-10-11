@@ -1,8 +1,10 @@
-package com.tylerpnn.pandora;
+package com.tylerpnn.player;
 
 import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
+import com.tylerpnn.pandora.Application;
+import com.tylerpnn.pandora.Song;
+import com.tylerpnn.pandora.UserSession;
 import com.tylerpnn.pandora.api.Station;
-import com.tylerpnn.player.Player;
 
 
 
@@ -21,6 +23,7 @@ public class StationThread extends Thread {
 		this.app = app;
 		this.user = user;
 		this.station = station;
+		setDaemon(true);
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import com.tylerpnn.pandora.api.Station;
 import com.tylerpnn.pandora.api.Track;
 import com.tylerpnn.pandora.api.User;
 import com.tylerpnn.player.Player;
+import com.tylerpnn.player.StationThread;
 import com.tylerpnn.ui.cli.CLI;
 import com.tylerpnn.ui.gui.Frame;
 
@@ -67,7 +68,6 @@ public class Application {
 	public void playStation(String stationName) {
 		this.stopPlayer();
 		this.stationThread = new StationThread(this, user, user.getStationInfoByName(stationName));
-		this.stationThread.setDaemon(true);
 		this.stationThread.start();
 	}
 	
