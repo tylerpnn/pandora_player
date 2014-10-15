@@ -1,5 +1,7 @@
 package com.tylerpnn.pandora;
 
+import javafx.application.Platform;
+
 import javax.swing.SwingUtilities;
 
 import com.tylerpnn.json.response.StationListResponse.Result.StationInfo;
@@ -10,7 +12,7 @@ import com.tylerpnn.pandora.api.User;
 import com.tylerpnn.player.Player;
 import com.tylerpnn.player.StationThread;
 import com.tylerpnn.ui.cli.CLI;
-import com.tylerpnn.ui.gui.Frame;
+import com.tylerpnn.ui.fx.Window;
 
 public class Application {
 
@@ -20,20 +22,17 @@ public class Application {
 
 
 	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new Application(args);
-			}
-		});
+		SwingUtilities.invokeLater(() -> new Application(args));
+//		Platform.runLater(() -> new Application(args));
 	}
 
 	public Application(String[] args) {
 		if(args.length > 0 && args[0].equals("-nogui")) {
 			ui = new CLI(this);
 		} else {
-			ui = new Frame(this);
+			ui = new Window(this);
 		}
-		ui.start();
+		Platform.runLater(() -> ui.start());
 	}
 
 	public static void exit() {
